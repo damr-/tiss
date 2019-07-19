@@ -1,0 +1,119 @@
+WFK D (Angewandte Physik)   Typ ECTS
+Archäometrie: Datierung, Spurenelement-Bestimmung   LU  2,0
+Archäometrie: Physikalische Methoden der Altersbestimmung   VO  3,0
+Atomare Stoßprozesse    VO  3,0
+Biological and Medical Applications of Nuclear Physics I    VO  3,0
+Biological and Medical Applications of Nuclear Physics II   VO  3,0
+Biologische Strahleneffekte VO  1,5
+Biomembranes    VO  1,5
+Brennstoffzellen    VO  3,0
+Chemische Übungen für TPH   LU  4,0
+Der Laser in Physik, Chemie, Biologie und Medizin   VO  3,0
+Echtzeit-Datenverarbeitung  VO  3,0
+Echtzeit-Datenverarbeitung  LU  2,0
+Einführung in die Biomedizinische Technik   VO  3,0
+Einführung in die Plasmaphysik und -technik VO  3,0
+Einführung in die Tieftemperaturphysik und -technologie VO  3,0
+Electron Microscopy: Principles and Fundamentals    VO  3,0
+Electronic Structure of Solids and Surfaces VO  3,0
+Elektrochemische Oberflächenphysik – Electrochemical surface science    VO  3,0
+Elektronenmikroskopie   LU  4,0
+Elektronenstrahl-Mikroanalyse   VO  1,5
+Elektronenstrahl-Mikroanalyse   UE  1,0
+Elektronische Analog- und Digitaltechnik    VO  3,0
+Elektronische Messtechnik   VO  3,0
+Energieübertragung und Kraftwerke   VO  3,0
+Experimentelle Methoden der Hochenergiephysik   LU  4,0
+Experimentelle Methoden der Oberflächenphysik   VO  3,0
+Festkörperspektroskopie VO  3,0
+Flüssigszintillations-Spektrometrie VO  1,5
+Functional Imaging Technology and Devices - Physical Principles VO  3,0
+Gammaspektrometrie  VO  3,0
+Geochemie   VO  1,5
+Graphical Programming and Experiment Control    LU  4,0
+Grundlagen der Teilchendetektoren   VO  3,0
+Grundlagen und Anwendung der Mikrocomputer-Technik  VO  3,0
+Grundlagen und Anwendung der Mikrocomputer-Technik  LU  2,0
+Grundzüge der Thermischen Energieanlagen    VO  3,0
+Herstellung und Charakterisierung von Solarzellen   LU  3,0
+Hochauflösende Elektronenmikroskopie von Festkörpern    VO  3,0
+Hochtemperatur-Supraleiter  VO  3,0
+Introduction to Nanotechnology  VO  3,0
+Ionen-Festkörper-Wechselwirkungen   VO  3,0
+Isotopentechnik VO  3,0
+Kernmagnetische Messmethoden    VO  3,0
+Laser-Matter Interaction    VO  3,0
+Magnetic Properties Measurements    VO  3,0
+Magnetismus VO  3,0
+Medizinische Physik in der Radiologie   VO  3,0
+Methoden und Materialien der modernen optischen Spektroskopie   VO  3,0
+Methods of Quantitative X-ray Fluorescence Analysis VO  3,0
+Neuronale Netzwerke VO  3,0
+Neutron Activation Analysis VO  3,0
+Neutronen- und Festkörperphysik VO  3,0
+New Developments in Surface Science SE  3,0
+Nuclear Analytical Methods  VO  3,0
+Nuclear Electronics VO  3,0
+Nuclear Engineering VO  3,0
+Nuclear Engineering 2   VO  3,0
+Nukleare Umweltanalytik VO  1,5
+Oberflächenphysik   VO  3,0
+Physics in High Magnetic Fields VO  3,0
+Physics of Magnetic Materials   VO  3,0
+Physik der Atmosphäre   VO  3,0
+Physik der Silizium-Halbleiter-Materialien  VO  3,0
+Physik der Solarzelle   VO  1,5
+Physik dünner Schichten VO  3,0
+Physik dünner Schichten UE  2,0
+Physik und Anwendung ultrakurzer Lichtimpulse   VO  3,0
+Physikalische Grundlagen des Kernfusionsreaktors    VO  3,0
+Physikalische Sensoren  VO  3,0
+Piezoelektrische Wandler und Resonatoren    VO  3,0
+Plasmatechnologie und -chemie   VO  3,0
+Practical Course in X-Ray Analytical Methods    LU  3,0
+Praktikum aus Festkörperphysik  LU  6,0
+Praktische Übungen am Reaktor   LU  4,0
+Praktische Übungen aus Reaktorinstrumentierung  LU  3,0
+Praktische Übungen aus Strahlenphysik   LU  4,0
+Radiochemie I   VO  3,0
+Radiochemisches Praktikum   LU  4,0
+Radionuklidbestimmung in Umweltproben   LU  4,0
+Radioökologie   VO  3,0
+Rechenmethoden des Strahlenschutzes I   UE  1,0
+Rechenmethoden des Strahlenschutzes II  UE  1,0
+Rechenverfahren in der Oberflächenphysik    VO  3,0
+Schallausbreitung und Lärmschutz    VO  3,0
+Semiconductor Detectors VO  1,5
+Seminar aus Allgemeiner Physik  SE  2,0
+Seminar aus Festkörperphysik    SE  2,0
+Seminar aus Reaktorsicherheit   SE  2,0
+Seminar Computational Materials Science SE  3,0
+Space Propulsion    VO  3,0
+Spezialverfahren der Röntgenfluoreszenzanalyse  VO  3,0
+SQUIDs - Grundlagen und Anwendungen VO  3,0
+Strahlenphysik  VO  4,5
+Strahlenphysikalische Anwendungen in Technik und Medizin    SE  3,0
+Strahlenphysikalische Methoden in der Medizin   VO  3,0
+Strahlenschutz und Dosimetrie   VO  3,0
+Strahlenschutzpraktikum LU  4,0
+Strömungslehre für TPH  VO  4,5
+Superconductivity Seminar   SE  3,0
+Supraleitung    VO  3,0
+Surface Science VO  3,0
+Technische Akustik  VO  3,0
+Technische Optik    VO  3,0
+Technischer Strahlenschutz I    VO  3,0
+Technischer Strahlenschutz II   VO  3,0
+Technologie dünner Schichten    VO  3,0
+Teilchenbeschleuniger   VO  3,0
+Theorie komplexer Systeme   VO  3,0
+Theory of Electronic Spectra of Solids and Surfaces VO  3,0
+Thermoelectricity and Transport in Solids   VO  3,0
+Tieftemperaturphysik    VO  3,0
+Ultrahochvakuumtechnik  VO  3,0
+Ultraschall in Medizin und Biologie VO  3,0
+Vakuumphysik und -Messtechnik   VO  3,0
+Versetzungen in Kristallen  VO  3,0
+Wasserstofftechnik  VO  3,0
+Weltraumdosimetrie  VO  1,5
+X-Ray Analytical Methods    VO  3,0

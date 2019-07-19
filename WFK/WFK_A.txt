@@ -1,0 +1,86 @@
+WFK A (Theoretische Physik) Typ ECTS
+Advanced Atomic Theory  VO  3,0
+Theoretical Quantum Optics  VO  3,0
+Arbeitsgemeinschaft für fundamentale Wechselwirkungen I PR  3,0
+Arbeitsgemeinschaft für fundamentale Wechselwirkungen II    PR  3,0
+Astro-Teilchenphysik    VO  3,0
+Attosekundenphysik  VO  3,0
+Black Holes I   VO  3,0
+Black Holes II  VO  3,0
+Classical and Quantum Chaos VO  3,0
+Coherent Control of Quantum Systems VO  3,0
+Computational Materials Science VU  6,0
+Computational Physics   VO  3,0
+Einführung in die Allgemeine Relativitätstheorie    VO  3,0
+Einführung in die Quantenfeldtheorie I  VO  3,0
+Einführung in die Quantenfeldtheorie II VO  3,0
+Einführung in die Teilchenphysik    VO  3,0
+Elektrodynamik II   UE  3,0
+Geometrie und Gravitation I VO  3,0
+Geometrie und Gravitation II    VO  3,0
+Geometrische Methoden der Theoretischen Physik  VO  3,0
+Geometry, Topology and Physics I    VU  3,0
+Geometry, Topology and Physics II   VU  3,0
+Gittereichtheorie   VO  3,0
+Grundlagen der Plasmatheorie    VO  3,0
+Grundlagen und Anwendung der Festkörpertheorie  VO  3,0
+Introduction to Quantum Electrodynamics VO  3,0
+Selected Topics Quantum Optics  VO  3,0
+Knotentheorie und Statistische Mechanik VO  3,0
+Kosmologie und Teilchenphysik   VO  3,0
+Laser-Matter Interaction    VO  3,0
+Lie-Gruppen in der Feldtheorie  VO  3,0
+Logische Methoden in der Theoretischen Physik   VO  3,0
+Literaturseminar Theoretische Quantendynamik    SE  3,0
+Aktuelle Kernstrukturmethoden   VO  3,0
+Neuronale Netzwerke VO  3,0
+Numerische Methoden der Physik  VU  5,0
+Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie VO  3,0
+Phänomenologische Teilchenphysik    VU  3,0
+Phasenübergänge und kritische Phänomene VO  3,0
+Physik weicher Materie  VO  3,0
+Quanten-Interferometrie im Phasenraum I VO  3,0
+Quanten-Interferometrie im Phasenraum II    VO  3,0
+Quantenberechenbarkeit u. -komplexitätstheorie  VO  3,0
+Quantenchromodynamik I  VO  3,0
+Quantenchromodynamik II VO  3,0
+Quantenfeldtheorie und Symmetrien I VO  3,0
+Quantenfeldtheorie und Symmetrien II    VO  3,0
+Quantenfeldtheorie für Vielteilchensysteme  VO  3,0
+Quantenfeldtheorie für Vielteilchensysteme  UE  2,0
+Quantisierte Feldmodelle in einer nichtkommutativen Raumzeit    VO  3,0
+Quantum phenomena in nanostructures VO  3,0
+Quantum Dynamics in Nanostructures  VO  3,0
+Quantum Theory of Angular Momenta   VO  3,0
+Raumzeit und Kosmologie (Space-time and Cosmology)  VO  3,0
+Rechenverfahren in der Oberflächenphysik    VO  3,0
+Selected Topics in Theoretical Physics I    VO  3,0
+Selected Topics in Theoretical Physics II   VO  3,0
+Selected Topics in Theoretical Physics III  VO  3,0
+Semiconductor Detectors VO  1,5
+Seminar für Theoretische Physik 1   SE  2,0
+Seminar für Theoretische Physik 2   SE  2,0
+Seminar über Atomare und Subatomare Physik  SE  2,0
+Solitonen, Differentialgeometrie und Topologie  VO  3,0
+Statistical Theory of Electromagentic Radiation VO  3,0
+Statistische Methoden der Datenanalyse  VO  3,0
+Statistische Methoden der Datenanalyse  UE  3,0
+Statistische Physik II  UE  3,0
+Steuerung und Auswertung von Experimenten   VO  3,0
+Steuerung und Auswertung von Experimenten   UE  2,0
+Streu- und Reaktionstheorie VO  3,0
+String Theory I VO  3,0
+String Theory II    VO  3,0
+Supersymmetry   VO  3,0
+Symbolische Mathematik in der Physik    UE  3,0
+Teilchenphysik, Stand und Perspektiven  VO  3,0
+The Physics of Compact Stars    VO  3,0
+Theoretical Particle Physics    VO  3,0
+Theoretical Solid State Physics I   VO  3,0
+Theoretical Solid State Physics II  VO  3,0
+Theorie der Supraleitung    VO  3,0
+Theorie komplexer Systeme   VO  3,0
+Theory of magnetism VO  3,0
+Thermische Quantenfeldtheorie   VO  3,0
+Thermodynamik   VO  3,0
+Thermodynamik   UE  1,5
