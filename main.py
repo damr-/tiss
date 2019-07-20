@@ -69,16 +69,15 @@ class App(QWidget):
             for m in s.modules:
                 text += "  " + m.name + "\n"
                 for c in m.catalogues:
-                   text += "    " + c.name + "\n"
-                   for co in c.courses:
-                      text += "      " + co.name + "\n"
-                      for ci in co.courseInfos:
-                         text += "        " + ci.number + " " + ci.courseType + " " + ci.semester + " " + ci.name + " " + str(ci.hours) + "h " + str(ci.credits) + "c " + ci.link + "\n"
+                    text += "    " + c.name + "\n"
+                    for co in c.courses:
+                        text += "      " + co.name + "\n"
+                        for ci in co.courseInfos:
+                            text += "        " + ci.number + " " + ci.courseType + " " + ci.semester + " " + ci.name + " " + str(ci.hours) + "h " + str(ci.credits) + "c " + ci.link + "\n"
                 for co2 in m.courses:
-                   text += "      " + co2.name + "\n"
-                   for ci2 in co2.courseInfos:
-                      text += "        " + ci2.number + " " + ci2.courseType + " " + ci2.semester + " " + ci2.name + " " + str(ci2.hours) + "h " + str(ci2.credits) + "c " + ci2.link + "\n"
-               
+                    text += "      " + co2.name + "\n"
+                    for ci2 in co2.courseInfos:
+                        text += "        " + ci2.number + " " + ci2.courseType + " " + ci2.semester + " " + ci2.name + " " + str(ci2.hours) + "h " + str(ci2.credits) + "c " + ci2.link + "\n"
         self.textEdit.setText(text)
 
 if __name__ == '__main__':
