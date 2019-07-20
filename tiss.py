@@ -15,7 +15,11 @@ url = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=43093&se
 transf_skills_url = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?date=20191001&key=57214"
 ignored_rows = ["Abschlussprüfung Kommissionelle Gesamtprüfung", "Abschlussarbeit Diplomarbeit", "Diplomarbeit und kommissionelle Gesamtprüfung", 
                 "Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessuren", "Wahlfachkataloge", "LVA-Nummern dazu", "Projektarbeiten", 
-                "Katalog Projektarbeiten", "LVAs aus dem entsprechenden Angleichkatalog und aus den gebundenen WFK"]
+                "Katalog Projektarbeiten", "LVAs aus dem entsprechenden Angleichkatalog und aus den gebundenen WFK",
+                "Externe Lehrveranstaltungen am IFF Wien"]
+catalogue_names = ['WFK', 'Katalog Freie Wahlfächer - Technische Physik', 'Modulgruppe ', 'Technik für Menschen', 'Gender Awareness', 'Sprachkompetenz',
+                'Sozialkompetenz', 'Medienkompetenz', 'Rechts- und wirtschaftswissenschaftliche Kompetenz', 'Sonstiges']
+module_names = ['Freie Wahlfächer', "Transferable Skills"]
 linkprefix = "https://tiss.tuwien.ac.at"
 DEBUG_LOG = False
 TIMEOUT = 20
@@ -51,23 +55,23 @@ class CourseInfo:
     courseType = ""
     semester = ""
     link = ""
-    hours = 0
-    credits = 0
-    def __init__(self, number, name, courseType, semester, link): #, hours, credits
+    hours = 0.0
+    credits = 0.0
+    def __init__(self, number, name, courseType, semester, link, hours, credits):
         self.number = number
         self.name = name
         self.courseType = courseType
         self.semester = semester
         self.link = link
-        #self.hours = hours
-        #self.credits = credits
+        self.hours = hours
+        self.credits = credits
 
 def isSubject(element):
     return 'Prüfungsfach' in element.text
 def isModule(element):
-    return any(element.text.strip() in s for s in ['Freie Wahlfächer', "Transferable Skills"]) or 'Modul ' in element.text
+    return any(element.text.strip() in s for s in module_names) or 'Modul ' in element.text
 def isCatalogue(element):
-    return any(s in element.text for s in ['WFK', 'Katalog Freie Wahlfächer - Technische Physik', 'Modulgruppe '])
+    return any(s in element.text for s in catalogue_names)
 def isCourse(element):
     return element['class'][-2] == 'item' #any('item' in c for c in element['class']]):
 def isCourseInfo(element):
@@ -137,23 +141,23 @@ for entry in entries:
         pass #Skip the main 'Masterstudium Technische Physik' headline row and other specific rows
     elif isSubject(entry):
         if DEBUG_LOG:
-            print("SUBJECT: " + entry.text);
+            print("SUBJECT: " + entry.text)
         curSubject = Subject(entry.text)
         subjects.append(curSubject)
     elif isModule(entry):
         if DEBUG_LOG:
-            print("   MODULE: " + entry.text);
+            print("   MODULE: " + entry.text)
         curModule = Module(entry.text)
         curSubject.modules.append(curModule)
     elif isCatalogue(entry):
         if DEBUG_LOG:
-            print("      CATALOGUE: " + entry.text.strip());
+            print("      CATALOGUE: " + entry.text.strip())
         curCatalogue = Catalogue(entry.text.strip())
         curModule.catalogues.append(curCatalogue)
     elif isCourse(entry):
         name = entry.text.strip()[4:] #Skip the course type at the start
         if DEBUG_LOG:
-            print("         COURSE: " + name);
+            print("         COURSE: " + name)
         curCourse = Course(name)
         if curCatalogue == None:
             curModule.courses.append(curCourse)
@@ -167,12 +171,12 @@ for entry in entries:
         semester = firstRow[2]
         name = parts[2]
         link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
-        #TODO The entry's parent's second and third sibling are Stunden and ECTS. GET THEM!
-        #hours = 
-        #credits = 
+        aunts = entry.parent.parent.findChildren("td", recursive=False)
+        hours = float(aunts[2].text.strip())
+        credits = float(aunts[3].text.strip())        
         if DEBUG_LOG:
-            print("            COURSEI: " + number + " " + courseType + " " + semester + " " + name + " " + link); #+hours+credits
-        curCourse.courseInfos.append(CourseInfo(number, name, courseType, semester, link)) #hours, credits))
+            print("            COURSEI: " + number + " " + courseType + " " + semester + " " + name + " " + str(hours) + "h " + str(credits) + "c " + link)
+        curCourse.courseInfos.append(CourseInfo(number, name, courseType, semester, link, hours, credits))
     else: #TODO fix the transferables which cannot be categorized yet
         print("Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
     i+=1
