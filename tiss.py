@@ -10,7 +10,6 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
-semester = "2019W"
 url = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=43093&semester=NEXT"
 transf_skills_url = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?date=20191001&key=57214"
 ignored_rows = ["Abschlussprüfung Kommissionelle Gesamtprüfung", "Abschlussarbeit Diplomarbeit", "Diplomarbeit und kommissionelle Gesamtprüfung", 
@@ -21,42 +20,30 @@ catalogue_names = ['WFK', 'Katalog Freie Wahlfächer - Technische Physik', 'Modu
                 'Sozialkompetenz', 'Medienkompetenz', 'Rechts- und wirtschaftswissenschaftliche Kompetenz', 'Sonstiges']
 module_names = ['Freie Wahlfächer', "Transferable Skills"]
 linkprefix = "https://tiss.tuwien.ac.at"
-DEBUG_LOG = False
 TIMEOUT = 20
 
 class Subject:
-    name = ""
-    modules = []
     def __init__(self, name):
         self.name = name
+        self.modules = []
 
 class Module:
-    name = ""
-    catalogues = []
-    courses = []        #if the module has no catalogues it has courses, but never both!
     def __init__(self, name):
         self.name = name
+        self.catalogues = []
+        self.courses = []        #if the module has no catalogues it has courses, but never both!
 
 class Catalogue:
-    name = ""
-    courses = []
     def __init__(self, name):
         self.name = name
+        self.courses = []
 
 class Course:
-    name = ""
-    courseInfos = []
     def __init__(self, name):
         self.name = name
+        self.courseInfos = []
 
 class CourseInfo:
-    number = 0
-    name = ""
-    courseType = ""
-    semester = ""
-    link = ""
-    hours = 0.0
-    credits = 0.0
     def __init__(self, number, name, courseType, semester, link, hours, credits):
         self.number = number
         self.name = name
@@ -77,7 +64,7 @@ def isCourse(element):
 def isCourseInfo(element):
     return 'course' in element['class'][-2].lower() #can also be 'canceledCourse'  #any('course' in c for c in element['class']]):
 
-def get_entries(url, driver, is_transferables):
+def get_entries(url, driver, is_transferables, semester):
     if not is_transferables:
         print("Loading main website...", end='', flush=True)
     else:
@@ -105,81 +92,86 @@ def get_entries(url, driver, is_transferables):
     print("done (%.2fs)" % (time.time()-start))
     return entries
 
-options = Options()
-options.headless = True
-totalStart = time.time()
+def getData(semester, DEBUG_LOG):
+    options = Options()
+    options.headless = True
+    totalStart = time.time()
 
-print("Starting headless gecko...", end='', flush=True)
-start = time.time()
-driver = webdriver.Firefox(options=options) # use headless firefox to get page with generated content
-print("done (%.2fs)" % (time.time()-start))
+    print("Starting headless gecko...", end='', flush=True)
+    start = time.time()
+    driver = webdriver.Firefox(options=options) # use headless firefox to get page with generated content
+    print("done (%.2fs)" % (time.time()-start))
 
-entries = get_entries(url, driver, False)
-transferable_skill_entries = get_entries(transf_skills_url, driver, True)[1:]  #The first row is another "Transferable Skills"
+    entries = get_entries(url, driver, False, semester)
+    transferable_skill_entries = get_entries(transf_skills_url, driver, True, semester)[1:]  #The first row is another "Transferable Skills"
 
-#Find "Transferable Skills" row and add the transferable skill entries
-idx = 0
-for entry in entries:
-    if isModule(entry) and "Transferable Skills" in entry.text:
-        idx = entries.index(entry) + 1
-        break
-entries[idx:idx] = transferable_skill_entries
+    #Find "Transferable Skills" row and add the transferable skill entries
+    idx = 0
+    for entry in entries:
+        if isModule(entry) and "Transferable Skills" in entry.text:
+            idx = entries.index(entry) + 1
+            break
+    entries[idx:idx] = transferable_skill_entries
 
-i=0
-start = time.time()
-subjects = []
-curSubject = curModule = curCatalogue = curCourse = None
-if DEBUG_LOG:
-    print("Sorting entries...")
+    i=0
+    start = time.time()
+    subjects = []
+    curSubject = curModule = curCatalogue = curCourse = None
+    if DEBUG_LOG:
+        print("Sorting entries...")
 
-for entry in entries:
-    if not DEBUG_LOG:
-        print("Sorting entries (%i/%i)..." % ((i+1), len(entries)) , end='\r', flush=True)
+    for entry in entries:
+        if not DEBUG_LOG:
+            print("Sorting entries (%i/%i)..." % ((i+1), len(entries)) , end='\r', flush=True)
 
-    if any('nodeTable-level-0' in c for c in entry['class']) or \
-        any(entry.text.strip() in ignored for ignored in ignored_rows):
-        pass #Skip the main 'Masterstudium Technische Physik' headline row and other specific rows
-    elif isSubject(entry):
-        if DEBUG_LOG:
-            print("SUBJECT: " + entry.text)
-        curSubject = Subject(entry.text)
-        subjects.append(curSubject)
-    elif isModule(entry):
-        if DEBUG_LOG:
-            print("   MODULE: " + entry.text)
-        curModule = Module(entry.text)
-        curSubject.modules.append(curModule)
-    elif isCatalogue(entry):
-        if DEBUG_LOG:
-            print("      CATALOGUE: " + entry.text.strip())
-        curCatalogue = Catalogue(entry.text.strip())
-        curModule.catalogues.append(curCatalogue)
-    elif isCourse(entry):
-        name = entry.text.strip()[4:] #Skip the course type at the start
-        if DEBUG_LOG:
-            print("         COURSE: " + name)
-        curCourse = Course(name)
-        if curCatalogue == None:
-            curModule.courses.append(curCourse)
+        if any('nodeTable-level-0' in c for c in entry['class']) or \
+            any(entry.text.strip() in ignored for ignored in ignored_rows):
+            pass #Skip the main 'Masterstudium Technische Physik' headline row and other specific rows
+        elif isSubject(entry):
+            if DEBUG_LOG:
+                print("SUBJECT: " + entry.text)
+            curSubject = Subject(entry.text)
+            subjects.append(curSubject)
+        elif isModule(entry):
+            if DEBUG_LOG:
+                print("   MODULE: " + entry.text)
+            curModule = Module(entry.text)
+            curCatalogue = None
+            curSubject.modules.append(curModule)
+        elif isCatalogue(entry):
+            if DEBUG_LOG:
+                print("      CATALOGUE: " + entry.text.strip())
+            curCatalogue = Catalogue(entry.text.strip())
+            curModule.catalogues.append(curCatalogue)
+        elif isCourse(entry):
+            name = entry.text.strip() #use [4:] to skip the course type at the start
+            if DEBUG_LOG:
+                print("         COURSE: " + name)
+            curCourse = Course(name)
+            if curCatalogue == None:
+                curModule.courses.append(curCourse)
+            else:
+                curCatalogue.courses.append(curCourse)
+        elif isCourseInfo(entry):
+            parts = entry.text.strip().splitlines()
+            firstRow = parts[0].split(' ')
+            number = firstRow[0]
+            courseType = firstRow[1]
+            semester = firstRow[2]
+            name = parts[2]
+            link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
+            aunts = entry.parent.parent.findChildren("td", recursive=False)
+            hours = float(aunts[2].text.strip())
+            credits = float(aunts[3].text.strip())        
+            if DEBUG_LOG:
+                print("            COURSEI: " + number + " " + courseType + " " + semester + " " + name + " " + str(hours) + "h " + str(credits) + "c " + link)
+            curCourse.courseInfos.append(CourseInfo(number, name, courseType, semester, link, hours, credits))
         else:
-            curCatalogue.courses.append(curCourse)
-    elif isCourseInfo(entry):
-        parts = entry.text.strip().splitlines()
-        firstRow = parts[0].split(' ')
-        number = firstRow[0]
-        courseType = firstRow[1]
-        semester = firstRow[2]
-        name = parts[2]
-        link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
-        aunts = entry.parent.parent.findChildren("td", recursive=False)
-        hours = float(aunts[2].text.strip())
-        credits = float(aunts[3].text.strip())        
-        if DEBUG_LOG:
-            print("            COURSEI: " + number + " " + courseType + " " + semester + " " + name + " " + str(hours) + "h " + str(credits) + "c " + link)
-        curCourse.courseInfos.append(CourseInfo(number, name, courseType, semester, link, hours, credits))
-    else: #TODO fix the transferables which cannot be categorized yet
-        print("Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
-    i+=1
-print("Sorting entries (%i/%i)...done (%.2fs)" % (len(entries), len(entries), (time.time()-start)))
-print("Total duration: %.2fs" %(time.time()-totalStart))
-driver.quit()
+            print("Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
+        i+=1
+    print("Sorting entries (%i/%i)...done (%.2fs)" % (len(entries), len(entries), (time.time()-start)))
+    print("Total duration: %.2fs" %(time.time()-totalStart))
+
+    driver.quit()
+    return subjects
+
