@@ -1,13 +1,15 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QTextBrowser, QPushButton, QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QAbstractItemView, QListView, QListWidgetItem, QSizePolicy
 from PyQt5 import QtCore, QtGui
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QTextBrowser, QPushButton, \
+                            QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, \
+                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout
 import functools
 from CourseFetcher import WorkerObject
 from CourseFetcher import Subject
 from CourseWidget import CourseWidget
 from EntryWidget import EntryWidget
 
-class App(QWidget):
+class MainWindow(QMainWindow):
     #signalStatus = QtCore.pyqtSignal(object)
     def __init__(self):
         super().__init__()
@@ -24,19 +26,31 @@ class App(QWidget):
         height = 600
         width = 800
         
+        centralWidget = QWidget(self)
+        self.setCentralWidget(centralWidget)
+
+        gridLayout = QGridLayout()
+        centralWidget.setLayout(gridLayout)
+
         self.button = QPushButton("do", self)
-        self.button.move(0, 0)
+        #self.button.move(0, 0)
         self.button.resize(50, 50)
+        self.button.sizePolicy().setHorizontalStretch(1)
+        gridLayout.addWidget(self.button, 0, 0)
 
         self.label = QLabel("<Status output>", self)
-        self.label.move(60, 5)
+        #self.label.move(60, 5)
         self.label.resize(250, 25)
+        self.label.sizePolicy().setHorizontalStretch(1)
+        gridLayout.addWidget(self.label, 1, 0)
 
         self.progressBar = QProgressBar(self)
-        self.progressBar.move(60, 15)
+        self.progressBar.move(50, 50)
         self.progressBar.resize(250, 50)
         self.progressBar.setRange(0, 100)
         self.progressBar.setValue(0)
+        self.progressBar.sizePolicy().setHorizontalStretch(0.1)
+        gridLayout.addWidget(self.progressBar, 2, 0)
 
         #self.textEdit = QTextBrowser(self)
         #self.textEdit.move(70, 70)
@@ -44,12 +58,12 @@ class App(QWidget):
         #self.textEdit.setReadOnly(False)
         #self.textEdit.setOpenExternalLinks(True)
 
-        self.entryList = QListWidget(self) #(gridLayout instead of self or sth)
+        self.entryList = QListWidget(self)
         self.entryList.move(70, 70)
         self.entryList.resize(width * 0.8, height * 0.8)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.entryList.sizePolicy().hasHeightForWidth())
         self.entryList.setSizePolicy(sizePolicy)
         self.entryList.setMinimumSize(QtCore.QSize(50, 50))
@@ -70,6 +84,7 @@ class App(QWidget):
         self.entryList.setResizeMode(QListView.Adjust)
         self.entryList.setUniformItemSizes(False)
         self.entryList.setObjectName("courseList")
+        gridLayout.addWidget(self.entryList, 0, 1, 5, 3)
 
 
         self.resize(width,height)
@@ -78,7 +93,6 @@ class App(QWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
-        self.show()
 
         #self.addNewCourse("100.000", "VO", "2019W", "TEST", 2, 3, "http://www.google.com")
         #self.addNewEntry("TEST2")
@@ -137,7 +151,6 @@ class App(QWidget):
 
     @QtCore.pyqtSlot(object)
     def fetchingFinished(self, subjects):
-        #text = "" 
         #TODO try to replace this by another worker!?
         self.button.setEnabled(True)
         for s in subjects:
@@ -154,9 +167,9 @@ class App(QWidget):
                     self.addNewEntry("      " + co2.name)
                     for ci2 in co2.courseInfos:
                         self.addNewCourse(ci2.number, ci2.courseType, ci2.semester, ci2.name, ci2.hours, ci2.credits, ci2.link)
-        #self.textEdit.setText(text)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = App()
+    mainWindow = MainWindow()
+    mainWindow.show()
     sys.exit(app.exec_())
