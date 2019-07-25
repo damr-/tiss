@@ -1,10 +1,8 @@
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtWidgets import QFrame, QWidget, QHBoxLayout, QLabel, QSizePolicy
+from EntryWidget import EntryWidget
+from PyQt5.QtWidgets import QLabel
 
-class CourseWidget(QWidget):
-#TODO make parent class for CourseWidget and EntryWidget
+class CourseWidget(EntryWidget):
     def __init__(self, number, courseType, semester, name, hours, credits, link):
-        super().__init__()
         self.number = number
         self.courseType = courseType
         self.semester = semester
@@ -12,30 +10,25 @@ class CourseWidget(QWidget):
         self.hours = hours
         self.credits = credits
         self.link = link
-
-        self.initUI()
+        self.t = "         " + self.number + " " + self.courseType + " " + self.semester + " " + self.name + " " + \
+                            str(self.hours) + "h " + str(self.credits) + "c " + self.link
+        super().__init__()
 
     def initUI(self):
-        self.setObjectName("CourseWidget")
-        self.resize(400, 30)
-        self.setMinimumSize(QtCore.QSize(1000, 30))
-        self.setMaximumSize(QtCore.QSize(1000, 30))
+        super().initUI()
+        self.numberLabel = QLabel(self)
+        self.numberLabel.setText(self.number)
+        self.numberLabel.resize(10, 30)
+        self.horizontalLayout.addWidget(self.numberLabel)
+        
+        self.typeLabel = QLabel(self)
+        self.typeLabel.setText(self.courseType)
+        self.typeLabel.resize(10, 30)
+        self.horizontalLayout.addWidget(self.typeLabel)
 
-        self.line = QFrame(self)
-        self.line.setGeometry(QtCore.QRect(0, 0, 1000, 30))
-        self.line.setFrameShape(QFrame.VLine)
-        self.line.setFrameShadow(QFrame.Sunken)
-
-        self.layoutWidget = QWidget(self)
-        self.layoutWidget.setGeometry(QtCore.QRect(0, 4, 181, 22))
-        self.layoutWidget.setObjectName("layoutWidget")
-        self.horizontalLayout = QHBoxLayout(self.layoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setSpacing(3)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-
-        self.label  = QLabel(self)
-        self.label.setText("         " + self.number + " " + self.courseType + " " + self.semester + " " + self.name + " " + \
-                            str(self.hours) + "h " + str(self.credits) + "c " + self.link)
-        self.label.resize(1000, 30)
-        self.horizontalLayout.addWidget(self.label)
+        self.tmpLabel = QLabel(self)
+        x = self.semester + " " + self.name + " " + str(self.hours) + "h " + str(self.credits) + "c " + self.link
+        self.tmpLabel.setText(x)
+        #self.tmpLabel.resize(100, 30)
+        self.horizontalLayout.addWidget(self.tmpLabel)
+        

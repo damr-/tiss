@@ -7,7 +7,7 @@ import functools
 from CourseFetcher import WorkerObject
 from CourseFetcher import Subject
 from CourseWidget import CourseWidget
-from EntryWidget import EntryWidget
+from CategoryWidget import CategoryWidget
 
 class MainWindow(QMainWindow):
     #signalStatus = QtCore.pyqtSignal(object)
@@ -33,34 +33,28 @@ class MainWindow(QMainWindow):
         centralWidget.setLayout(gridLayout)
 
         self.button = QPushButton("do", self)
-        #self.button.move(0, 0)
         self.button.resize(50, 50)
         self.button.sizePolicy().setHorizontalStretch(1)
+        self.button.sizePolicy().setVerticalStretch(1)
         gridLayout.addWidget(self.button, 0, 0)
 
         self.label = QLabel("<Status output>", self)
-        #self.label.move(60, 5)
         self.label.resize(250, 25)
         self.label.sizePolicy().setHorizontalStretch(1)
+        self.label.sizePolicy().setVerticalStretch(1)
         gridLayout.addWidget(self.label, 1, 0)
 
         self.progressBar = QProgressBar(self)
-        self.progressBar.move(50, 50)
         self.progressBar.resize(250, 50)
         self.progressBar.setRange(0, 100)
         self.progressBar.setValue(0)
         self.progressBar.sizePolicy().setHorizontalStretch(0.1)
+        self.progressBar.sizePolicy().setVerticalStretch(0.1)
         gridLayout.addWidget(self.progressBar, 2, 0)
 
-        #self.textEdit = QTextBrowser(self)
-        #self.textEdit.move(70, 70)
-        #self.textEdit.resize(width * 0.8, height * 0.8)
-        #self.textEdit.setReadOnly(False)
-        #self.textEdit.setOpenExternalLinks(True)
-
         self.entryList = QListWidget(self)
-        self.entryList.move(70, 70)
-        self.entryList.resize(width * 0.8, height * 0.8)
+        #self.entryList.move(70, 70)
+        #self.entryList.resize(width * 0.5, height * 0.5)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(1)
@@ -84,7 +78,7 @@ class MainWindow(QMainWindow):
         self.entryList.setResizeMode(QListView.Adjust)
         self.entryList.setUniformItemSizes(False)
         self.entryList.setObjectName("courseList")
-        gridLayout.addWidget(self.entryList, 0, 1, 5, 3)
+        gridLayout.addWidget(self.entryList, 0, 1, 10, 5)
 
 
         self.resize(width,height)
@@ -94,8 +88,8 @@ class MainWindow(QMainWindow):
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
 
-        #self.addNewCourse("100.000", "VO", "2019W", "TEST", 2, 3, "http://www.google.com")
-        #self.addNewEntry("TEST2")
+        self.addNewCourse("100.000", "VO", "2019W", "TEST", 2, 3, "http://www.google.com")
+        self.addNewCategory("TEST2")
 
     def setupWorkerThread(self):
         # Setup the worker object and the worker_thread.
@@ -120,8 +114,8 @@ class MainWindow(QMainWindow):
                 worker_thread.terminate()
                 worker_thread.wait()"""
     
-    def addNewEntry(self, text):
-        itemWidget = EntryWidget(text)
+    def addNewCategory(self, text):
+        itemWidget = CategoryWidget(text)
         self.addNewEntryItem(itemWidget)
 
     def addNewCourse(self, number, courseType, semester, name, hours, credits, link):
@@ -154,17 +148,17 @@ class MainWindow(QMainWindow):
         #TODO try to replace this by another worker!?
         self.button.setEnabled(True)
         for s in subjects:
-            self.addNewEntry(s.name)
+            self.addNewCategory(s.name)
             for m in s.modules:
-                self.addNewEntry("  " + m.name)
+                self.addNewCategory("  " + m.name)
                 for c in m.catalogues:
-                    self.addNewEntry("    " + c.name)
+                    self.addNewCategory("    " + c.name)
                     for co in c.courses:
-                        self.addNewEntry("      " + co.name)
+                        self.addNewCategory("      " + co.name)
                         for ci in co.courseInfos:
                             self.addNewCourse(ci.number, ci.courseType, ci.semester, ci.name, ci.hours, ci.credits, ci.link)
                 for co2 in m.courses:
-                    self.addNewEntry("      " + co2.name)
+                    self.addNewCategory("      " + co2.name)
                     for ci2 in co2.courseInfos:
                         self.addNewCourse(ci2.number, ci2.courseType, ci2.semester, ci2.name, ci2.hours, ci2.credits, ci2.link)
 

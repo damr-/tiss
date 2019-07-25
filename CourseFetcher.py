@@ -30,21 +30,30 @@ class Subject:
 class Module:
     def __init__(self, name):
         self.name = name
+        #TODO
+        #self.subject = 
         self.catalogues = []
         self.courses = []        #if the module has no catalogues it has courses, but never both!
 
 class Catalogue:
     def __init__(self, name):
+        #TODO
+        #self.module = 
         self.name = name
         self.courses = []
 
 class Course:
     def __init__(self, name):
+        #TODO
+        #self.module = 
+        #OR
+        #self.catalogue = 
         self.name = name
         self.courseInfos = []
 
 class CourseInfo:
     def __init__(self, number, name, courseType, semester, link, hours, credits):
+        #self.course = 
         self.number = number
         self.name = name
         self.courseType = courseType
