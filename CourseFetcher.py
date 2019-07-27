@@ -1,4 +1,3 @@
-import time
 from collections import deque
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -26,34 +25,36 @@ class Subject:
     def __init__(self, name):
         self.name = name
         self.modules = []
+    def isEmpty(self):
+        return len(self.modules) == 0
 
 class Module:
-    def __init__(self, name):
+    def __init__(self, name):#, subject):
         self.name = name
-        #TODO
-        #self.subject = 
+        #self.subject = subject
         self.catalogues = []
         self.courses = []        #if the module has no catalogues it has courses, but never both!
+    def isEmpty(self):
+        return len(self.catalogues) == 0 and len(self.courses) == 0
 
 class Catalogue:
-    def __init__(self, name):
-        #TODO
-        #self.module = 
+    def __init__(self, name):#, module):
+        #self.module = module
         self.name = name
         self.courses = []
+    
+    def isEmpty(self):
+        return len(self.courses) == 0
 
 class Course:
-    def __init__(self, name):
-        #TODO
-        #self.module = 
-        #OR
-        #self.catalogue = 
+    def __init__(self, course, number, name, courseType, semester, link, hours, credits):#name, module=None, catalogue=None):
+        """
+        self.module = module
+        self.catalogue = catalogue
         self.name = name
         self.courseInfos = []
-
-class CourseInfo:
-    def __init__(self, number, name, courseType, semester, link, hours, credits):
-        #self.course = 
+        """
+        self.course = course 
         self.number = number
         self.name = name
         self.courseType = courseType
@@ -62,10 +63,22 @@ class CourseInfo:
         self.hours = hours
         self.credits = credits
 
+"""
+class CourseInfo:
+    def __init__(self, course, number, name, courseType, semester, link, hours, credits):
+        self.course = course 
+        self.number = number
+        self.name = name
+        self.courseType = courseType
+        self.semester = semester
+        self.link = link
+        self.hours = hours
+        self.credits = credits"""
+
 def isSubject(element):
     return 'Prüfungsfach' in element.text
 def isModule(element):
-    return any(element.text.strip() in s for s in moduleNames) or 'Modul ' in element.text
+    return any(element.text.strip() == s for s in moduleNames) or 'Modul ' in element.text
 def isCatalogue(element):
     return any(s in element.text for s in catalogueNames)
 def isCourse(element):
@@ -75,7 +88,7 @@ def isCourseInfo(element):
 
 class WorkerObject(QtCore.QObject):
     updateSignal = QtCore.pyqtSignal(str)
-    doneSignal = QtCore.pyqtSignal(object)
+    doneSignal = QtCore.pyqtSignal(object, int)
 
     def __init__(self, parent=None):
         super(self.__class__, self).__init__(parent)
@@ -99,16 +112,25 @@ class WorkerObject(QtCore.QObject):
         WebDriverWait(driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g'))) #Wait until spinning gif vanished
 
         if not isTransferables:
-            self.updateSignal.emit("Fetching courses...")
+            self.updateSignal.emit("Fetching entries...")
         soup = BeautifulSoup(driver.page_source, 'html.parser')
+
         return soup.select("div.ui-outputpanel")
+        #headers = soup.select("div.ui-outputpanel > span.bold")
+        #courseInfos = soup.select("div.ui-outputpanel > div.courseKey") #skip all empty courses
+        #return headers.append(courseInfos)
+        #TODO now we need to sort them though :(
+        #MAYBE take all dif.ui-outputpanel an REMOVE empty ocurses?!
 
     def sortCourses(self, courses):
         subjects = []
         i=0
         curSubject = curModule = curCatalogue = curCourse = None
+        foundFirstFreieWF = False
+        skippingVertiefung2 = False
+
         for entry in courses:
-            self.updateSignal.emit("Sorting courses (%i/%i)..." % ((i+1), len(courses)))
+            self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i+1), len(courses)))
 
             if any('nodeTable-level-0' in c for c in entry['class']) or \
                 any(entry.text.strip() in ignored for ignored in ignoredRows):
@@ -116,19 +138,38 @@ class WorkerObject(QtCore.QObject):
             elif isSubject(entry):
                 curSubject = Subject(entry.text)
                 subjects.append(curSubject)
+                #if skippingVertiefung2: #TODO CHECK: this if should not be necessary since the first thing after module Vertiefung 2 is another module, not a subjet
+                    #skippingVertiefung2 = False #stop skipping
             elif isModule(entry):
-                curModule = Module(entry.text)
+                if entry.text.strip() == "Freie Wahlfächer": #For some reason, there are two "Freie Wahlfächer" in the list.
+                    if not foundFirstFreieWF:
+                        foundFirstFreieWF = True
+                    else:   #skip second "Freie Wahlfächer"
+                        i+=1
+                        continue
+                elif skippingVertiefung2:
+                    skippingVertiefung2 = False #stop skipping
+                elif entry.text.strip() == "Modul Vertiefung 2":
+                    skippingVertiefung2 = True
+                    i += 1
+                    continue
+                
+                curModule = Module(entry.text, curSubject)
                 curCatalogue = None
                 curSubject.modules.append(curModule)
+            elif skippingVertiefung2:
+                i += 1
+                continue
             elif isCatalogue(entry):
-                curCatalogue = Catalogue(entry.text.strip())
+                curCatalogue = Catalogue(entry.text.strip(), curModule)
                 curModule.catalogues.append(curCatalogue)
-            elif isCourse(entry):
+            elif isCourse(entry): #TODO MOVE COURSEINFO INTO COURSE, NOONE NEEDS THESE "HEADERS" IF THERE ARE NO EMPTY COURSES
                 name = entry.text.strip() #[4:] to skip the course type at the start
-                curCourse = Course(name)
                 if curCatalogue == None:
+                    curCourse = Course(name, module=curModule)
                     curModule.courses.append(curCourse)
                 else:
+                    curCourse = Course(name, catalogue=curCatalogue)
                     curCatalogue.courses.append(curCourse)
             elif isCourseInfo(entry):
                 parts = entry.text.strip().splitlines()
@@ -141,7 +182,7 @@ class WorkerObject(QtCore.QObject):
                 aunts = entry.parent.parent.findChildren("td", recursive=False)
                 hours = float(aunts[2].text.strip())
                 credits = float(aunts[3].text.strip())        
-                curCourse.courseInfos.append(CourseInfo(number, name, courseType, semester, link, hours, credits))
+                curCourse.courseInfos.append(CourseInfo(curCourse, number, name, courseType, semester, link, hours, credits))
             else:
                 print("Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
             i+=1
@@ -149,7 +190,6 @@ class WorkerObject(QtCore.QObject):
 
     @QtCore.pyqtSlot()
     def startWork(self, semester, timeout):
-        totalStart = time.time()
         driver = self.startGecko()
 
         courses = self.getEntries(coursesURL, driver, semester, timeout, False)
@@ -165,5 +205,30 @@ class WorkerObject(QtCore.QObject):
         
         subjects = self.sortCourses(courses)
         driver.quit()
-        self.updateSignal.emit("Fetching finished (%.2fs)" %(time.time()-totalStart))
-        self.doneSignal.emit(subjects)
+        self.updateSignal.emit("Fetching finished")
+
+        count = 0
+        for s in subjects:
+            count += 1
+            for m in s.modules:
+                count += 1
+                for c in m.catalogues:
+                    count += 1
+                    for co in c.courses:
+                        count += 1
+                        for ci in co.courseInfos:
+                            count += 1
+                for co2 in m.courses:
+                    count += 1
+                    for ci2 in co2.courseInfos:
+                            count += 1
+        self.doneSignal.emit(subjects, count)
+
+
+class WorkerObject2(QtCore.QObject):
+    updateSignal = QtCore.pyqtSignal(str)
+    doneSignal = QtCore.pyqtSignal(object, int)
+
+    @QtCore.pyqtSlot()
+    def startWork(self, entryList, entries):
+        pass
