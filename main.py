@@ -12,17 +12,20 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.initUI()
-        self.setupWorkerThread()
-    
-    def initUI(self):
+
         self.semester = "2019W"
         self.timeout = 30
         self.fetchIncrement = 20
         self.hiddenItems = {}
+        self.subjects = []
         
-        height = 600
-        width = 800
+        self.height = 600
+        self.width = 800
+
+        self.initUI()
+        self.setupWorkerThread()
+    
+    def initUI(self):
         
         centralWidget = QWidget(self)
         self.setCentralWidget(centralWidget)
@@ -44,10 +47,6 @@ class MainWindow(QMainWindow):
         self.progressBar.setValue(0)
         gridLayout.addWidget(self.progressBar, 2, 0)
 
-        self.toggle = QCheckBox("toggle", self)
-        self.toggle.toggled.connect(self.toggleCourses)
-        gridLayout.addWidget(self.toggle, 3, 0)
-
         self.entryList = QListWidget(self)
         self.entryList.setObjectName("Entrylist")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -68,7 +67,7 @@ class MainWindow(QMainWindow):
         self.entryList.setSelectionMode(QAbstractItemView.SingleSelection)
         gridLayout.addWidget(self.entryList, 0, 1, 10, 5)
 
-        self.resize(width,height)
+        self.resize(self.width, self.height)
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
@@ -78,11 +77,10 @@ class MainWindow(QMainWindow):
         self.resizeEvent = self.windowResizeEvent
 
         """
-        self.addNewCourseInfo("100.000", "VO", "2019W", "TEST", 2, 3, "http://www.google.com")
+        self.addNewCourse("100.000", "VO", "2019W", "TEST", 2, 3, "http://www.google.com")
         self.addNewCategory("Subject", CategoryWidget.SUBJECT)
         self.addNewCategory("Module", CategoryWidget.MODULE)
         self.addNewCategory("Catalogue", CategoryWidget.CATALOGUE)
-        self.addNewCategory("Course", CategoryWidget.COURSE)
         """
 
     def windowResizeEvent(self, e):
@@ -120,13 +118,13 @@ class MainWindow(QMainWindow):
         itemWidget = CategoryWidget(text, categoryType)
         self.addNewEntryItem(itemWidget, False)
 
-    def addNewCourseInfo(self, number, courseType, semester, name, hours, credits, link):
+    def addNewCourse(self, number, courseType, semester, name, hours, credits, link):
         itemWidget = CourseWidget(number, courseType, semester, name, hours, credits, link)
         self.addNewEntryItem(itemWidget, True)
     
-    def addNewEntryItem(self, itemWidget, isCourseInfo):
+    def addNewEntryItem(self, itemWidget, isCourse):
         item = QListWidgetItem()
-        if not isCourseInfo:
+        if not isCourse:
             item.setFlags(item.flags() & ~QtCore.Qt.ItemIsSelectable);
         row = self.entryList.count()
         self.entryList.insertItem(row, item)
@@ -151,68 +149,14 @@ class MainWindow(QMainWindow):
                         if i == index:
                             return co
                         i+=1
-                        for ci in co.courseInfos:
-                            if i == index:
-                                return ci
-                            i+=1
                 for co2 in m.courses:
                     if i == index:
                         return co2
                     i+=1
-                    for ci2 in co2.courseInfos:
-                        if i == index:
-                            return ci2
-                        i+=1
 
     def getItemWidget(self, idx):
         item = self.entryList.item(idx)
         return self.entryList.itemWidget(item)
-
-    @QtCore.pyqtSlot(bool)
-    def toggleCourses(self, toggle):
-        if toggle:
-            idx = 1
-            rowsToHide = []
-            itemWidgets = []
-            #lastLen = -1
-            #TODO: do this search once when the list was fetched from TISS 
-            #later, when courses are missing because they are already in one's personal WFK list, manually add them to hiddenItems
-            # when they are moved to the personal WFK list
-            #while True:
-            for s in self.subjects:
-                if s.isEmpty():
-                    rowsToHide.append(idx)
-                idx += 1
-                for m in s.modules:
-                    if m.isEmpty():
-                        rowsToHide.append(idx)
-                    idx += 1
-                    for c in m.catalogues:
-                        if c.isEmpty():
-                            rowsToHide.append(idx)
-                        idx += 1
-                        for co in c.courses:
-                            if co.isEmpty():
-                                rowsToHide.append(idx)
-                            else:
-                                for aab in co.courseInfos:
-                                    print(aab.name)
-                            idx += 1
-                    for co2 in m.courses:
-                        if co2.isEmpty():
-                            rowsToHide.append(idx)
-                        else:
-                            for aab in co2.courseInfos:
-                                print(aab.name)
-                        idx += 1
-
-            for row in rowsToHide:
-                listWidgetitem = self.entryList.takeItem(row)
-                self.hiddenItems[row] = listWidgetitem
-        else:
-            for row in self.hiddenItems:
-                listWidgetitem = self.hiddenItems[row]
-                self.entryList.insertItem(row, listWidgetitem)
 
     @QtCore.pyqtSlot()
     def prepareFetching(self):
@@ -220,7 +164,6 @@ class MainWindow(QMainWindow):
         self.label.setText("")
         self.button.setEnabled(False)
         self.entryList.setEnabled(False)
-        self.toggle.setEnabled(False)
         self.startTime = time.time()
 
     @QtCore.pyqtSlot(str)
@@ -230,12 +173,12 @@ class MainWindow(QMainWindow):
 
     @QtCore.pyqtSlot(object, int)
     def fetchingFinished(self, subjects, count):
-        self.subjects = subjects
+        self.subjects = subjects[:]
         self.button.setEnabled(True)
         self.label.setText("Importing entries...")
         self.progressBar.setValue(0)
         i = 0
-        for s in subjects:
+        for s in self.subjects:
             self.addNewCategory(s.name, CategoryWidget.SUBJECT)
             i+=1
             for m in s.modules:
@@ -245,27 +188,20 @@ class MainWindow(QMainWindow):
                     self.addNewCategory("  " + c.name, CategoryWidget.CATALOGUE)
                     i+=1
                     for co in c.courses:
-                        self.addNewCategory("   " + co.name, CategoryWidget.COURSE)
-                        i+=1
-                        for ci in co.courseInfos:
-                            self.addNewCourseInfo(ci.number, ci.courseType, ci.semester, ci.name, ci.hours, ci.credits, ci.link)
-                            i+=1
-                            self.label.setText("Importing entries...(%i,%i)"%(i,count))
-                            self.progressBar.setValue(int(float(i/count)*100))
-                            QtWidgets.qApp.processEvents()
-                for co2 in m.courses:
-                    self.addNewCategory("   " + co2.name, CategoryWidget.COURSE)
-                    i+=1
-                    for ci2 in co2.courseInfos:
-                        self.addNewCourseInfo(ci2.number, ci2.courseType, ci2.semester, ci2.name, ci2.hours, ci2.credits, ci2.link)
+                        self.addNewCourse(co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
                         i+=1
                         self.label.setText("Importing entries...(%i,%i)"%(i,count))
                         self.progressBar.setValue(int(float(i/count)*100))
                         QtWidgets.qApp.processEvents()
+                for co in m.courses:
+                    self.addNewCourse(co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
+                    i+=1
+                    self.label.setText("Importing entries...(%i,%i)"%(i,count))
+                    self.progressBar.setValue(int(float(i/count)*100))
+                    QtWidgets.qApp.processEvents()
         self.label.setText("Finished (%.2fs)" % (time.time()-self.startTime));
         self.entryList.setEnabled(True)
         self.progressBar.setValue(1)
-        self.toggle.setEnabled(True)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -29,17 +29,15 @@ class Subject:
         return len(self.modules) == 0
 
 class Module:
-    def __init__(self, name):#, subject):
+    def __init__(self, name):
         self.name = name
-        #self.subject = subject
         self.catalogues = []
         self.courses = []        #if the module has no catalogues it has courses, but never both!
     def isEmpty(self):
         return len(self.catalogues) == 0 and len(self.courses) == 0
 
 class Catalogue:
-    def __init__(self, name):#, module):
-        #self.module = module
+    def __init__(self, name):
         self.name = name
         self.courses = []
     
@@ -47,14 +45,7 @@ class Catalogue:
         return len(self.courses) == 0
 
 class Course:
-    def __init__(self, course, number, name, courseType, semester, link, hours, credits):#name, module=None, catalogue=None):
-        """
-        self.module = module
-        self.catalogue = catalogue
-        self.name = name
-        self.courseInfos = []
-        """
-        self.course = course 
+    def __init__(self, number, name, courseType, semester, link, hours, credits):
         self.number = number
         self.name = name
         self.courseType = courseType
@@ -63,18 +54,6 @@ class Course:
         self.hours = hours
         self.credits = credits
 
-"""
-class CourseInfo:
-    def __init__(self, course, number, name, courseType, semester, link, hours, credits):
-        self.course = course 
-        self.number = number
-        self.name = name
-        self.courseType = courseType
-        self.semester = semester
-        self.link = link
-        self.hours = hours
-        self.credits = credits"""
-
 def isSubject(element):
     return 'Prüfungsfach' in element.text
 def isModule(element):
@@ -82,8 +61,6 @@ def isModule(element):
 def isCatalogue(element):
     return any(s in element.text for s in catalogueNames)
 def isCourse(element):
-    return element['class'][-2] == 'item' #any('item' in c for c in element['class']]):
-def isCourseInfo(element):
     return 'course' in element['class'][-2].lower() #can also be 'canceledCourse'  #any('course' in c for c in element['class']]):
 
 class WorkerObject(QtCore.QObject):
@@ -115,31 +92,48 @@ class WorkerObject(QtCore.QObject):
             self.updateSignal.emit("Fetching entries...")
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        return soup.select("div.ui-outputpanel")
-        #headers = soup.select("div.ui-outputpanel > span.bold")
-        #courseInfos = soup.select("div.ui-outputpanel > div.courseKey") #skip all empty courses
-        #return headers.append(courseInfos)
-        #TODO now we need to sort them though :(
-        #MAYBE take all dif.ui-outputpanel an REMOVE empty ocurses?!
+        allEntries = soup.select("div.ui-outputpanel")
+        headerChilds = soup.select("div.ui-outputpanel > span.bold")
+        headers = []
+        for c in headerChilds:
+            headers.append(c.parent)
 
-    def sortCourses(self, courses):
+        coursesChilds = soup.select("div.ui-outputpanel > div.courseKey") #only take courses with an actual existing TISS page
+        courses = []
+        for c in coursesChilds:
+            courses.append(c.parent)
+
+        filteredEntries = []
+        for entry in allEntries:
+            if entry in headers:
+                filteredEntries.append(entry)
+                headers.remove(entry)
+            elif entry in courses:
+                filteredEntries.append(entry)
+                courses.remove(entry)
+
+        return filteredEntries
+        
+    def sortEntries(self, entries):
         subjects = []
         i=0
-        curSubject = curModule = curCatalogue = curCourse = None
+        curSubject = curModule = curCatalogue = None
         foundFirstFreieWF = False
         skippingVertiefung2 = False
 
-        for entry in courses:
-            self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i+1), len(courses)))
+        for entry in entries:
+            self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i+1), len(entries)))
 
             if any('nodeTable-level-0' in c for c in entry['class']) or \
                 any(entry.text.strip() in ignored for ignored in ignoredRows):
                 pass #Skip the main "Masterstudium Technische Physik" headline row and other specific rows
             elif isSubject(entry):
-                curSubject = Subject(entry.text)
-                subjects.append(curSubject)
-                #if skippingVertiefung2: #TODO CHECK: this if should not be necessary since the first thing after module Vertiefung 2 is another module, not a subjet
-                    #skippingVertiefung2 = False #stop skipping
+                text = entry.text
+                if skippingVertiefung2: #The next subject is "Allgemeine Pflichtfächer"
+                    text = entry.text + "(Vertiefung 2 ONLY)"   #add text to clarify that it's only for "Vertiefung 2"
+                    skippingVertiefung2 = False                 #stop skipping
+                curSubject = Subject(text)
+                subjects.append(curSubject)                
             elif isModule(entry):
                 if entry.text.strip() == "Freie Wahlfächer": #For some reason, there are two "Freie Wahlfächer" in the list.
                     if not foundFirstFreieWF:
@@ -147,31 +141,21 @@ class WorkerObject(QtCore.QObject):
                     else:   #skip second "Freie Wahlfächer"
                         i+=1
                         continue
-                elif skippingVertiefung2:
-                    skippingVertiefung2 = False #stop skipping
                 elif entry.text.strip() == "Modul Vertiefung 2":
                     skippingVertiefung2 = True
                     i += 1
                     continue
                 
-                curModule = Module(entry.text, curSubject)
+                curModule = Module(entry.text)
                 curCatalogue = None
                 curSubject.modules.append(curModule)
             elif skippingVertiefung2:
                 i += 1
                 continue
             elif isCatalogue(entry):
-                curCatalogue = Catalogue(entry.text.strip(), curModule)
+                curCatalogue = Catalogue(entry.text.strip())
                 curModule.catalogues.append(curCatalogue)
-            elif isCourse(entry): #TODO MOVE COURSEINFO INTO COURSE, NOONE NEEDS THESE "HEADERS" IF THERE ARE NO EMPTY COURSES
-                name = entry.text.strip() #[4:] to skip the course type at the start
-                if curCatalogue == None:
-                    curCourse = Course(name, module=curModule)
-                    curModule.courses.append(curCourse)
-                else:
-                    curCourse = Course(name, catalogue=curCatalogue)
-                    curCatalogue.courses.append(curCourse)
-            elif isCourseInfo(entry):
+            elif isCourse(entry):
                 parts = entry.text.strip().splitlines()
                 firstRow = parts[0].split(' ')
                 number = firstRow[0]
@@ -181,8 +165,12 @@ class WorkerObject(QtCore.QObject):
                 link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
                 aunts = entry.parent.parent.findChildren("td", recursive=False)
                 hours = float(aunts[2].text.strip())
-                credits = float(aunts[3].text.strip())        
-                curCourse.courseInfos.append(CourseInfo(curCourse, number, name, courseType, semester, link, hours, credits))
+                credits = float(aunts[3].text.strip()) 
+                newCourse = Course(number, name, courseType, semester, link, hours, credits)
+                if curCatalogue == None:
+                    curModule.courses.append(newCourse)
+                else:
+                    curCatalogue.courses.append(newCourse)         
             else:
                 print("Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
             i+=1
@@ -203,10 +191,9 @@ class WorkerObject(QtCore.QObject):
                 break
         courses[idx:idx] = transferablesCourses
         
-        subjects = self.sortCourses(courses)
+        subjects = self.sortEntries(courses)
         driver.quit()
         self.updateSignal.emit("Fetching finished")
-
         count = 0
         for s in subjects:
             count += 1
@@ -216,14 +203,9 @@ class WorkerObject(QtCore.QObject):
                     count += 1
                     for co in c.courses:
                         count += 1
-                        for ci in co.courseInfos:
-                            count += 1
                 for co2 in m.courses:
                     count += 1
-                    for ci2 in co2.courseInfos:
-                            count += 1
         self.doneSignal.emit(subjects, count)
-
 
 class WorkerObject2(QtCore.QObject):
     updateSignal = QtCore.pyqtSignal(str)

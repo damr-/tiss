@@ -7,7 +7,6 @@ class CategoryWidget(EntryWidget):
     SUBJECT = 1
     MODULE = 2
     CATALOGUE = 3
-    COURSE = 4
 
     MinHeight = 20
 
@@ -31,8 +30,6 @@ class CategoryWidget(EntryWidget):
             self.label.setMinimumSize(QtCore.QSize(self.layout.parent().size().width(), CategoryWidget.MinHeight))
         elif self.categoryType == CategoryWidget.CATALOGUE:
             self.setStyleSheet("font-weight: bold;");
-        elif self.categoryType == CategoryWidget.COURSE:
-            pass
         else:
             print("Undefined category-type " + str(self.categoryType))
         self.layout.addWidget(self.label)
