@@ -1,8 +1,8 @@
 import sys, time, functools
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QCheckBox, QTextBrowser, \
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, \
                             QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, \
-                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout
+                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox
 from CourseFetcher import WorkerObject
 from CourseFetcher import Subject
 from CourseWidget import CourseWidget
@@ -13,11 +13,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.semester = "2019W"
         self.timeout = 30
         self.fetchIncrement = 20
-        self.hiddenItems = {}
-        self.subjects = []
         
         self.height = 600
         self.width = 800
@@ -33,19 +30,25 @@ class MainWindow(QMainWindow):
         gridLayout = QGridLayout()
         centralWidget.setLayout(gridLayout)
 
-        self.button = QPushButton("do", self)
+        self.semesterBox = QComboBox(self)
+        self.semesterBox.addItem("2019S")
+        self.semesterBox.addItem("2019W")
+        self.semesterBox.setCurrentIndex(1)
+        gridLayout.addWidget(self.semesterBox, 0, 0)
+
+        self.button = QPushButton("Fetch Courses", self)
         self.button.resize(50, 50)
-        gridLayout.addWidget(self.button, 0, 0)
+        gridLayout.addWidget(self.button, 1, 0)
 
         self.label = QLabel("<Status output>", self)
         self.label.resize(250, 25)
-        gridLayout.addWidget(self.label, 1, 0)
+        gridLayout.addWidget(self.label, 2, 0)
 
         self.progressBar = QProgressBar(self)
         self.progressBar.resize(250, 50)
         self.progressBar.setRange(0, 100)
         self.progressBar.setValue(0)
-        gridLayout.addWidget(self.progressBar, 2, 0)
+        gridLayout.addWidget(self.progressBar, 3, 0)
 
         self.entryList = QListWidget(self)
         self.entryList.setObjectName("Entrylist")
@@ -73,15 +76,7 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
-
         self.resizeEvent = self.windowResizeEvent
-
-        """
-        self.addNewCourse("100.000", "VO", "2019W", "TEST", 2, 3, "http://www.google.com")
-        self.addNewCategory("Subject", CategoryWidget.SUBJECT)
-        self.addNewCategory("Module", CategoryWidget.MODULE)
-        self.addNewCategory("Catalogue", CategoryWidget.CATALOGUE)
-        """
 
     def windowResizeEvent(self, e):
         for i in range(self.entryList.count()):
@@ -89,7 +84,6 @@ class MainWindow(QMainWindow):
             itemWidget = self.entryList.itemWidget(item)
             if type(itemWidget) is CategoryWidget:
                 itemWidget.updateMinimumSize()
-
 
     def setupWorkerThread(self):
         # Setup the worker object and the worker_thread.
@@ -102,7 +96,7 @@ class MainWindow(QMainWindow):
         worker.doneSignal.connect(self.fetchingFinished)
         worker.updateSignal.connect(self.updateStatus)
         self.button.clicked.connect(self.prepareFetching)
-        self.button.clicked.connect(functools.partial(worker.startWork, self.semester, self.timeout))
+        self.button.clicked.connect(functools.partial(worker.startWork, self.semesterBox.currentText(), self.timeout))
 
         #def connectSignals(self):
             #self.gui.button_cancel.clicked.connect(self.forceWorkerReset)
@@ -130,29 +124,6 @@ class MainWindow(QMainWindow):
         self.entryList.insertItem(row, item)
         self.entryList.setItemWidget(item, itemWidget)
         item.setSizeHint(QtCore.QSize(itemWidget.width(), itemWidget.height()))
-    
-    def getEntry(self, index):
-        i=0
-        for s in self.subjects:
-            if i == index:
-                return s
-            i+=1
-            for m in s.modules:
-                if i == index:
-                    return m
-                i+=1
-                for c in m.catalogues:
-                    if i == index:
-                        return c
-                    i+=1
-                    for co in c.courses:
-                        if i == index:
-                            return co
-                        i+=1
-                for co2 in m.courses:
-                    if i == index:
-                        return co2
-                    i+=1
 
     def getItemWidget(self, idx):
         item = self.entryList.item(idx)
@@ -173,19 +144,18 @@ class MainWindow(QMainWindow):
 
     @QtCore.pyqtSlot(object, int)
     def fetchingFinished(self, subjects, count):
-        self.subjects = subjects[:]
         self.button.setEnabled(True)
         self.label.setText("Importing entries...")
         self.progressBar.setValue(0)
         i = 0
-        for s in self.subjects:
-            self.addNewCategory(s.name, CategoryWidget.SUBJECT)
+        for s in subjects:
+            #self.addNewCategory(s.name, CategoryWidget.SUBJECT)
             i+=1
             for m in s.modules:
-                self.addNewCategory(" " + m.name, CategoryWidget.MODULE)
+                #self.addNewCategory(" " + m.name, CategoryWidget.MODULE)
                 i+=1
                 for c in m.catalogues:
-                    self.addNewCategory("  " + c.name, CategoryWidget.CATALOGUE)
+                    self.addNewCategory(c.name, CategoryWidget.CATALOGUE)
                     i+=1
                     for co in c.courses:
                         self.addNewCourse(co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
