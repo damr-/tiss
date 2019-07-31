@@ -1,10 +1,10 @@
 import sys, time, functools
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, \
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, \
                             QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, \
                             QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox
 from CourseFetcher import WorkerObject
-from CourseFetcher import Subject
+from CourseFetcher import Catalogue
 from CourseWidget import CourseWidget
 from CategoryWidget import CategoryWidget
 
@@ -15,9 +15,10 @@ class MainWindow(QMainWindow):
 
         self.timeout = 30
         self.fetchIncrement = 20
-        
         self.height = 600
         self.width = 800
+        self.entryLists = []
+        self.catalogueLetters = ['A', 'B', 'C', 'D']
 
         self.initUI()
         self.setupWorkerThread()
@@ -30,11 +31,11 @@ class MainWindow(QMainWindow):
         gridLayout = QGridLayout()
         centralWidget.setLayout(gridLayout)
 
-        self.semesterBox = QComboBox(self)
-        self.semesterBox.addItem("2019S")
-        self.semesterBox.addItem("2019W")
-        self.semesterBox.setCurrentIndex(1)
-        gridLayout.addWidget(self.semesterBox, 0, 0)
+        self.semesterSelectBox = QComboBox(self)
+        self.semesterSelectBox.addItem("2019S")
+        self.semesterSelectBox.addItem("2019W")
+        self.semesterSelectBox.setCurrentIndex(1)
+        gridLayout.addWidget(self.semesterSelectBox, 0, 0)
 
         self.button = QPushButton("Fetch Courses", self)
         self.button.resize(50, 50)
@@ -49,26 +50,38 @@ class MainWindow(QMainWindow):
         self.progressBar.setRange(0, 100)
         self.progressBar.setValue(0)
         gridLayout.addWidget(self.progressBar, 3, 0)
-
-        self.entryList = QListWidget(self)
-        self.entryList.setObjectName("Entrylist")
+    
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.entryList.sizePolicy().hasHeightForWidth())
-        self.entryList.setSizePolicy(sizePolicy)
-        self.entryList.setMinimumSize(QtCore.QSize(50, 50))
-        self.entryList.setSizeIncrement(QtCore.QSize(1, 1))
-        font =  QtGui.QFont()
-        font.setPointSize(10)
-        self.entryList.setFont(font)
-        self.entryList.setStyleSheet("selection-background-color: rgb(159, 181, 255);")
-        self.entryList.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.entryList.setDropIndicatorShown(False)
-        self.entryList.setDragEnabled(False)
-        self.entryList.setDefaultDropAction(QtCore.Qt.IgnoreAction)
-        self.entryList.setSelectionMode(QAbstractItemView.SingleSelection)
-        gridLayout.addWidget(self.entryList, 0, 1, 10, 5)
+
+        self.tabWidget = QTabWidget(self)
+        self.tabWidget.setSizePolicy(sizePolicy)
+        self.tabWidget.setMinimumSize(QtCore.QSize(50, 50))
+
+        self.entryListA, self.entryListB, self.entryListC, self.entryListD = (QListWidget(self) for i in range(4))
+        self.entryLists.append(self.entryListA)
+        self.entryLists.append(self.entryListB)
+        self.entryLists.append(self.entryListC)
+        self.entryLists.append(self.entryListD)
+
+        for index, l in enumerate(self.entryLists):
+            l.setSizePolicy(sizePolicy)
+            l.setMinimumSize(QtCore.QSize(50, 50))
+            #self.entryList.setSizeIncrement(QtCore.QSize(1, 1))
+            #font =  QtGui.QFont()
+            #font.setPointSize(10)
+            #self.entryList.setFont(font)
+            #self.entryList.setStyleSheet("selection-background-color: rgb(159, 181, 255);")
+            l.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            l.setDropIndicatorShown(False)
+            l.setDragEnabled(False)
+            l.setDefaultDropAction(QtCore.Qt.IgnoreAction)
+            l.setSelectionMode(QAbstractItemView.SingleSelection)
+
+            self.tabWidget.addTab(l, self.catalogueLetters[index])
+        
+        gridLayout.addWidget(self.tabWidget, 0, 1, 10, 5)
 
         self.resize(self.width, self.height)
         qr = self.frameGeometry()
@@ -76,14 +89,6 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
-        self.resizeEvent = self.windowResizeEvent
-
-    def windowResizeEvent(self, e):
-        for i in range(self.entryList.count()):
-            item = self.entryList.item(i);
-            itemWidget = self.entryList.itemWidget(item)
-            if type(itemWidget) is CategoryWidget:
-                itemWidget.updateMinimumSize()
 
     def setupWorkerThread(self):
         # Setup the worker object and the worker_thread.
@@ -96,7 +101,7 @@ class MainWindow(QMainWindow):
         worker.doneSignal.connect(self.fetchingFinished)
         worker.updateSignal.connect(self.updateStatus)
         self.button.clicked.connect(self.prepareFetching)
-        self.button.clicked.connect(functools.partial(worker.startWork, self.semesterBox.currentText(), self.timeout))
+        self.button.clicked.connect(functools.partial(worker.startWork, self.semesterSelectBox.currentText(), self.timeout))
 
         #def connectSignals(self):
             #self.gui.button_cancel.clicked.connect(self.forceWorkerReset)
@@ -108,33 +113,29 @@ class MainWindow(QMainWindow):
                 worker_thread.terminate()
                 worker_thread.wait()"""
 
-    def addNewCategory(self, text, categoryType):
-        itemWidget = CategoryWidget(text, categoryType)
-        self.addNewEntryItem(itemWidget, False)
-
-    def addNewCourse(self, number, courseType, semester, name, hours, credits, link):
+    def addNewCourse(self, catalogueList, number, courseType, semester, name, hours, credits, link):
         itemWidget = CourseWidget(number, courseType, semester, name, hours, credits, link)
-        self.addNewEntryItem(itemWidget, True)
-    
-    def addNewEntryItem(self, itemWidget, isCourse):
         item = QListWidgetItem()
-        if not isCourse:
-            item.setFlags(item.flags() & ~QtCore.Qt.ItemIsSelectable);
-        row = self.entryList.count()
-        self.entryList.insertItem(row, item)
-        self.entryList.setItemWidget(item, itemWidget)
+        item.setFlags(item.flags() & ~QtCore.Qt.ItemIsSelectable);
+        row = catalogueList.count()
+        catalogueList.insertItem(row, item)
+        catalogueList.setItemWidget(item, itemWidget)
         item.setSizeHint(QtCore.QSize(itemWidget.width(), itemWidget.height()))
 
-    def getItemWidget(self, idx):
-        item = self.entryList.item(idx)
-        return self.entryList.itemWidget(item)
+    def getItemWidget(self, catalogueList, idx):
+        item = catalogueList.item(idx)
+        return catalogueList.itemWidget(item)
 
     @QtCore.pyqtSlot()
     def prepareFetching(self):
         self.progressBar.setValue(0)
         self.label.setText("")
+        self.semesterSelectBox.setEnabled(False)
         self.button.setEnabled(False)
-        self.entryList.setEnabled(False)
+        for l in self.entryLists:
+            l.setEnabled(False)
+            
+        #TODO: REMOVE ALL ITEMS FROM entryListABCD
         self.startTime = time.time()
 
     @QtCore.pyqtSlot(str)
@@ -142,35 +143,24 @@ class MainWindow(QMainWindow):
         self.label.setText(str)
         self.progressBar.setValue(self.progressBar.value() + self.fetchIncrement)
 
-    @QtCore.pyqtSlot(object, int)
-    def fetchingFinished(self, subjects, count):
+    @QtCore.pyqtSlot(object)
+    def fetchingFinished(self, catalogues):
         self.button.setEnabled(True)
-        self.label.setText("Importing entries...")
         self.progressBar.setValue(0)
-        i = 0
-        for s in subjects:
-            #self.addNewCategory(s.name, CategoryWidget.SUBJECT)
-            i+=1
-            for m in s.modules:
-                #self.addNewCategory(" " + m.name, CategoryWidget.MODULE)
-                i+=1
-                for c in m.catalogues:
-                    self.addNewCategory(c.name, CategoryWidget.CATALOGUE)
-                    i+=1
-                    for co in c.courses:
-                        self.addNewCourse(co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
-                        i+=1
-                        self.label.setText("Importing entries...(%i,%i)"%(i,count))
-                        self.progressBar.setValue(int(float(i/count)*100))
-                        QtWidgets.qApp.processEvents()
-                for co in m.courses:
-                    self.addNewCourse(co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
-                    i+=1
-                    self.label.setText("Importing entries...(%i,%i)"%(i,count))
-                    self.progressBar.setValue(int(float(i/count)*100))
-                    QtWidgets.qApp.processEvents()
+        self.label.setText("Importing entries...")
+        
+        for index, c in enumerate(catalogues):
+            currentListWidget = self.entryLists[index]
+            for i, co in enumerate(c.courses):
+                self.addNewCourse(currentListWidget, co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
+                self.label.setText("Importing \"WFK %s\"...(%i,%i)"%(self.catalogueLetters[index], i, len(c.courses)))
+                self.progressBar.setValue(int(float(i/len(c.courses))*100))
+                QtWidgets.qApp.processEvents()
+                
         self.label.setText("Finished (%.2fs)" % (time.time()-self.startTime));
-        self.entryList.setEnabled(True)
+        for l in self.entryLists:
+            l.setEnabled(True)
+        self.semesterSelectBox.setEnabled(True)
         self.progressBar.setValue(1)
 
 if __name__ == '__main__':

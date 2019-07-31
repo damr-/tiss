@@ -11,24 +11,8 @@ from selenium.common.exceptions import NoSuchElementException
 from PyQt5 import QtCore
 
 coursesURL = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=43093&semester=NEXT"
-transferablesURL = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?date=20191001&key=57214"
 linkprefix = "https://tiss.tuwien.ac.at"
-ignoredRows = ["Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessuren", "Wahlfachkataloge", "LVA-Nummern dazu"]
-
-class Subject:
-    def __init__(self, name):
-        self.name = name
-        self.modules = []
-    def isEmpty(self):
-        return len(self.modules) == 0
-
-class Module:
-    def __init__(self, name):
-        self.name = name
-        self.catalogues = [] #if the module has no catalogues it has courses, but never both!
-        self.courses = []
-    def isEmpty(self):
-        return len(self.catalogues) == 0 and len(self.courses) == 0
+ignoredRows = ["Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessuren", "Wahlfachkataloge", "LVA-Nummern dazu", "Gebundener WFK D) Angewandte Physik (Fortsetzung)"]
 
 class Catalogue:
     def __init__(self, name):
@@ -48,10 +32,6 @@ class Course:
         self.hours = hours
         self.credits = credits
 
-def isSubject(element):
-    return 'Prüfungsfach' in element.text
-def isModule(element):
-    return 'Modul ' in element.text
 def isCatalogue(element):
     return 'WFK' in element.text
 def isCourse(element):
@@ -59,7 +39,7 @@ def isCourse(element):
 
 class WorkerObject(QtCore.QObject):
     updateSignal = QtCore.pyqtSignal(str)
-    doneSignal = QtCore.pyqtSignal(object, int)
+    doneSignal = QtCore.pyqtSignal(object)
 
     def __init__(self, parent=None):
         super(self.__class__, self).__init__(parent)
@@ -114,18 +94,20 @@ class WorkerObject(QtCore.QObject):
     def getVertiefung1Courses(self, url, driver, semester, TIMEOUT):
         self.updateSignal.emit("Connecting to TISS...")
         driver.get(url)
+
         WebDriverWait(driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b')))
+        #TODO FIX TIMEOUT EXCEPTION
 
         self.updateSignal.emit("Selecting semester %s..." % semester)
         semesterSelect = Select(driver.find_element_by_id('j_id_2b:semesterSelect'))
         semesterSelect.select_by_visible_text(semester)
         WebDriverWait(driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))
+        #TODO FIX TIMEOUT EXCEPTION
 
         self.updateSignal.emit("Fetching entries...")
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
         allEntries = soup.select("div.ui-outputpanel")
-
         
         headerChilds = soup.select("div.ui-outputpanel > span.bold")
         headers = []
@@ -135,18 +117,6 @@ class WorkerObject(QtCore.QObject):
         courses = []
         for c in coursesChilds:
             courses.append(c.parent)
-        """
-        filteredEntries = []
-        foundVertiefung1 = False
-        for entry in allEntries:
-            text = entry.text.strip()
-            if entry in headers and "Module Vertiefung 1" in text:
-                filteredEntries.append(entry)
-                headers.remove(entry)
-            elif entry in courses:
-                filteredEntries.append(entry)
-                courses.remove(entry)
-        """
 
         start = soup.findAll("span", text="Vertiefung 1")[0].parent
         end = soup.findAll("span", text="Vertiefung 2")[0].parent
@@ -156,6 +126,7 @@ class WorkerObject(QtCore.QObject):
         for entry in allEntries:
             if entry == start:
                 found = True
+                continue
             elif entry == end:
                 break
             if found and (entry in headers or entry in courses):
@@ -163,28 +134,21 @@ class WorkerObject(QtCore.QObject):
         return filteredEntries
 
     def sortEntries(self, entries):
-        subjects = []
+        catalogues = []
         i=0
-        curModule = curCatalogue = None
+        curCatalogue = None
         skippingVertiefung2 = False
         foundFirstFreieWF = False
         skippingModulProjektarbeit = False
 
-        curSubject = Subject("Vertiefungen")
-        subjects.append(curSubject)
-
         for entry in entries:
             self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i+1), len(entries)))
             
-            if any(entry.text.strip() in ignored for ignored in ignoredRows):
+            if any(entry.text.strip() == ignored for ignored in ignoredRows):
                 pass
-            elif isModule(entry):
-                curModule = Module(entry.text.strip())
-                curCatalogue = None
-                curSubject.modules.append(curModule)
             elif isCatalogue(entry):
                 curCatalogue = Catalogue(entry.text.strip())
-                curModule.catalogues.append(curCatalogue)
+                catalogues.append(curCatalogue)
             elif isCourse(entry):
                 parts = entry.text.strip().splitlines()
                 firstRow = parts[0].split(' ')
@@ -197,55 +161,19 @@ class WorkerObject(QtCore.QObject):
                 hours = float(aunts[2].text.strip())
                 credits = float(aunts[3].text.strip()) 
                 newCourse = Course(number, name, courseType, semester, link, hours, credits)
-                if curCatalogue == None:
-                    curModule.courses.append(newCourse)
-                else:
-                    curCatalogue.courses.append(newCourse)         
+                curCatalogue.courses.append(newCourse)         
             else:
-                print("Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
+                print("ERROR: Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
             i+=1
-        return subjects
+        return catalogues
 
     @QtCore.pyqtSlot()
     def startWork(self, semester, timeout):
         driver = self.startGecko()
-
-        #courses = self.getEntries(coursesURL, driver, semester, timeout, False)
-        #transferablesCourses = self.getEntries(transferablesURL, driver, semester, timeout, True)[1:]  #The first row is another "Transferable Skills"
-
-        """        
-        #Find "Transferable Skills" row and add the transferable skill courses
-        idx = 0
-        for entry in courses:
-            idx += 1
-            if "Transferable" in entry.text.strip():
-                break
-        courses[idx:idx] = transferablesCourses
-        """
 
         courses = self.getVertiefung1Courses(coursesURL, driver, semester, timeout)
         vertiefungen = self.sortEntries(courses)
 
         driver.quit()
         self.updateSignal.emit("Fetching finished")
-
-        count = 0
-        for s in vertiefungen:
-            count += 1
-            for m in s.modules:
-                count += 1
-                for c in m.catalogues:
-                    count += 1
-                    for co in c.courses:
-                        count += 1
-                for co2 in m.courses:
-                    count += 1
-        self.doneSignal.emit(vertiefungen, count)
-
-class WorkerObject2(QtCore.QObject):
-    updateSignal = QtCore.pyqtSignal(str)
-    doneSignal = QtCore.pyqtSignal(object, int)
-
-    @QtCore.pyqtSlot()
-    def startWork(self, entryList, entries):
-        pass
+        self.doneSignal.emit(vertiefungen)

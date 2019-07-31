@@ -34,7 +34,9 @@ class CategoryWidget(EntryWidget):
             print("Undefined category-type " + str(self.categoryType))
         self.layout.addWidget(self.label)
 
+    """
     def updateMinimumSize(self):
         if self.categoryType == CategoryWidget.SUBJECT or \
             self.categoryType == CategoryWidget.MODULE:
             self.label.resize(self.layout.parent().size().width(), self.label.size().height())
+    """

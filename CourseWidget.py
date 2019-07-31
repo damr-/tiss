@@ -11,7 +11,7 @@ class CourseWidget(EntryWidget):
         self.hours = hours
         self.credits = credits
         self.link = link
-        self.t = "      " + self.number + " " + self.courseType + " " + self.semester + " " + self.name + " " + \
+        self.t = self.number + " " + self.courseType + " " + self.semester + " " + self.name + " " + \
                             str(self.hours) + "h " + str(self.credits) + "c"
         super().__init__()
 
