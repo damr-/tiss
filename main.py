@@ -24,7 +24,6 @@ class MainWindow(QMainWindow):
         self.setupWorkerThread()
     
     def initUI(self):
-        
         centralWidget = QWidget(self)
         self.setCentralWidget(centralWidget)
 
@@ -81,7 +80,7 @@ class MainWindow(QMainWindow):
 
             self.tabWidget.addTab(l, self.catalogueLetters[index])
         
-        gridLayout.addWidget(self.tabWidget, 0, 1, 10, 5)
+        gridLayout.addWidget(self.tabWidget, 0, 1, 15, 10)
 
         self.resize(self.width, self.height)
         qr = self.frameGeometry()
@@ -116,7 +115,6 @@ class MainWindow(QMainWindow):
     def addNewCourse(self, catalogueList, number, courseType, semester, name, hours, credits, link):
         itemWidget = CourseWidget(number, courseType, semester, name, hours, credits, link)
         item = QListWidgetItem()
-        item.setFlags(item.flags() & ~QtCore.Qt.ItemIsSelectable);
         row = catalogueList.count()
         catalogueList.insertItem(row, item)
         catalogueList.setItemWidget(item, itemWidget)
@@ -133,9 +131,8 @@ class MainWindow(QMainWindow):
         self.semesterSelectBox.setEnabled(False)
         self.button.setEnabled(False)
         for l in self.entryLists:
+            l.clear()
             l.setEnabled(False)
-            
-        #TODO: REMOVE ALL ITEMS FROM entryListABCD
         self.startTime = time.time()
 
     @QtCore.pyqtSlot(str)
@@ -153,7 +150,7 @@ class MainWindow(QMainWindow):
             currentListWidget = self.entryLists[index]
             for i, co in enumerate(c.courses):
                 self.addNewCourse(currentListWidget, co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
-                self.label.setText("Importing \"WFK %s\"...(%i,%i)"%(self.catalogueLetters[index], i, len(c.courses)))
+                self.label.setText("Importing \"WFK %s\"...(%i/%i)"%(self.catalogueLetters[index], i, len(c.courses)))
                 self.progressBar.setValue(int(float(i/len(c.courses))*100))
                 QtWidgets.qApp.processEvents()
                 
