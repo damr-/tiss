@@ -2,9 +2,10 @@ import sys, time, functools
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, \
                             QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, \
-                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox
+                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout
 from CourseFetcher import WorkerObject
 from CourseFetcher import Catalogue
+from CourseFetcher import Course
 from CourseWidget import CourseWidget
 from CategoryWidget import CategoryWidget
 
@@ -13,11 +14,17 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.entryListsWidth = 15
+        self.entryListsHeight = 10
+        self.personalWidth = 5
+        self.personalHeight = 5
         self.timeout = 30
         self.fetchIncrement = 20
-        self.height = 600
-        self.width = 800
+        self.height = 780
+        self.width = 1400
+        self.catalogues = []
         self.entryLists = []
+        self.personalLists = []
         self.catalogueLetters = ['A', 'B', 'C', 'D']
 
         self.initUI()
@@ -56,17 +63,18 @@ class MainWindow(QMainWindow):
 
         self.tabWidget = QTabWidget(self)
         self.tabWidget.setSizePolicy(sizePolicy)
-        self.tabWidget.setMinimumSize(QtCore.QSize(50, 50))
+        self.tabWidget.setMinimumSize(QtCore.QSize(0, 50))
 
         self.entryListA, self.entryListB, self.entryListC, self.entryListD = (QListWidget(self) for i in range(4))
         self.entryLists.append(self.entryListA)
         self.entryLists.append(self.entryListB)
         self.entryLists.append(self.entryListC)
         self.entryLists.append(self.entryListD)
-
+        
         for index, l in enumerate(self.entryLists):
             l.setSizePolicy(sizePolicy)
             l.setMinimumSize(QtCore.QSize(50, 50))
+            l.setObjectName("WFK " + self.catalogueLetters[index] + " list")
             #self.entryList.setSizeIncrement(QtCore.QSize(1, 1))
             #font =  QtGui.QFont()
             #font.setPointSize(10)
@@ -77,10 +85,39 @@ class MainWindow(QMainWindow):
             l.setDragEnabled(False)
             l.setDefaultDropAction(QtCore.Qt.IgnoreAction)
             l.setSelectionMode(QAbstractItemView.SingleSelection)
-
+            l.itemDoubleClicked.connect(self.addPersonalItem)
             self.tabWidget.addTab(l, self.catalogueLetters[index])
-        
-        gridLayout.addWidget(self.tabWidget, 0, 1, 15, 10)
+
+        gridLayout.addWidget(self.tabWidget, 0, 1, self.entryListsWidth, self.entryListsHeight)
+
+        self.personalListA, self.personalListB, self.personalListC, self.personalListD = (QListWidget(self) for i in range(4))
+        self.personalLists.append(self.personalListA)
+        self.personalLists.append(self.personalListB)
+        self.personalLists.append(self.personalListC)
+        self.personalLists.append(self.personalListD)
+        for index, l in enumerate(self.personalLists):
+            l.setSizePolicy(sizePolicy)
+            l.setMinimumSize(QtCore.QSize(50, 50))
+            l.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            l.setDropIndicatorShown(False)
+            l.setDragEnabled(False)
+            l.setDefaultDropAction(QtCore.Qt.IgnoreAction)
+            l.setSelectionMode(QAbstractItemView.SingleSelection)
+            l.itemDoubleClicked.connect(self.removePersonalItem)
+            
+            row = 0
+            col = self.entryListsWidth + 1 + self.personalWidth
+            if index > 1:
+                row = self.personalHeight + 1
+            if index % 2 == 0:
+                col -= self.personalWidth
+
+            vlayout = QVBoxLayout()
+            titleLabel = QLabel("WFK " + self.catalogueLetters[index], self)
+            #titleLabel.resize(250, 25)
+            vlayout.addWidget(titleLabel)
+            vlayout.addWidget(l)
+            gridLayout.addLayout(vlayout, row, col, self.personalWidth, self.personalHeight)
 
         self.resize(self.width, self.height)
         qr = self.frameGeometry()
@@ -88,6 +125,36 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
+
+        
+        ca = Catalogue("TestA")
+        cb = Catalogue("TestB")
+        cc = Catalogue("TestC")
+        cd = Catalogue("TestD")
+
+        ca1 = Course("000.000", "VO", "2019W", "TestName1", 3.0, 3.0, "test.com")
+        ca2 = Course("000.000", "VO", "2019W", "TestName11", 3.0, 3.0, "test.com")
+        cb1 = Course("000.000", "VO", "2019W", "TestName2", 3.0, 3.0, "test.com")
+        cc1 = Course("000.000", "VO", "2019W", "TestName3", 3.0, 3.0, "test.com")
+        cd1 = Course("000.000", "VO", "2019W", "TestName4", 3.0, 3.0, "test.com")
+
+        ca.courses.append(ca1)
+        ca.courses.append(ca2)
+        cb.courses.append(cb1)
+        cc.courses.append(cc1)
+        cd.courses.append(cd1)
+
+        self.catalogues.append(ca)
+        self.catalogues.append(cb)
+        self.catalogues.append(cc)
+        self.catalogues.append(cd)
+
+        self.addNewCourseCopy(self.entryLists[0], ca1)
+        self.addNewCourseCopy(self.entryLists[0], ca2)
+        self.addNewCourseCopy(self.entryLists[1], cb1)
+        self.addNewCourseCopy(self.entryLists[2], cc1)
+        self.addNewCourseCopy(self.entryLists[3], cd1)
+
 
     def setupWorkerThread(self):
         # Setup the worker object and the worker_thread.
@@ -112,17 +179,41 @@ class MainWindow(QMainWindow):
                 worker_thread.terminate()
                 worker_thread.wait()"""
 
-    def addNewCourse(self, catalogueList, number, courseType, semester, name, hours, credits, link):
+    def addNewCourseCopy(self, targetList, course):
+        self.addNewCourse(targetList, course.number, course.courseType, course.semester, course.name, course.hours, course.credits, course.link)
+
+    def addNewCourse(self, targetList, number, courseType, semester, name, hours, credits, link):
         itemWidget = CourseWidget(number, courseType, semester, name, hours, credits, link)
         item = QListWidgetItem()
-        row = catalogueList.count()
-        catalogueList.insertItem(row, item)
-        catalogueList.setItemWidget(item, itemWidget)
+        row = targetList.count()
+        targetList.insertItem(row, item)
+        targetList.setItemWidget(item, itemWidget)
         item.setSizeHint(QtCore.QSize(itemWidget.width(), itemWidget.height()))
 
-    def getItemWidget(self, catalogueList, idx):
-        item = catalogueList.item(idx)
-        return catalogueList.itemWidget(item)
+    def getItemWidget(self, targetList, idx):
+        item = targetList.item(idx)
+        return targetList.itemWidget(item)
+
+    def addPersonalItem(self, item):
+        originList = self.sender()
+
+        courseIdx = originList.indexFromItem(item).row()
+        catalogueIdx = self.entryLists.index(originList)
+        course = self.catalogues[catalogueIdx].courses[courseIdx]
+
+        targetList = self.personalLists[catalogueIdx]
+
+        for i in range(targetList.count()):
+            itemWidget = self.getItemWidget(targetList, i)
+            if itemWidget.t == course.t:
+                return
+
+        self.addNewCourseCopy(targetList, course)
+
+    def removePersonalItem(self, item):
+        originList = self.sender()
+        courseIdx = originList.indexFromItem(item).row()
+        originList.takeItem(courseIdx)
 
     @QtCore.pyqtSlot()
     def prepareFetching(self):
@@ -145,7 +236,8 @@ class MainWindow(QMainWindow):
         self.button.setEnabled(True)
         self.progressBar.setValue(0)
         self.label.setText("Importing entries...")
-        
+
+        self.catalogues = catalogues[:]
         for index, c in enumerate(catalogues):
             currentListWidget = self.entryLists[index]
             for i, co in enumerate(c.courses):

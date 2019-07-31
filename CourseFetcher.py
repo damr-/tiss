@@ -31,7 +31,8 @@ class Course:
         self.link = link
         self.hours = hours
         self.credits = credits
-
+        self.t = self.number + " " + self.courseType + " " + self.semester + " " + self.name + " " + \
+                            str(self.hours) + "h " + str(self.credits) + "c"
 def isCatalogue(element):
     return 'WFK' in element.text
 def isCourse(element):

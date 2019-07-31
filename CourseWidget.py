@@ -21,7 +21,7 @@ class CourseWidget(EntryWidget):
         self.label = QLabel(self.t, self)
         self.layout.addWidget(self.label)
 
-        self.label2 = QLabel("<a href=\"" + self.link + "\">TISS</a>", self)
+        self.label2 = QLabel("<a href=\"" + str(self.link) + "\">TISS</a>", self)
         self.label2.setTextFormat(QtCore.Qt.RichText);
         self.label2.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction);
         self.label2.setOpenExternalLinks(True);
