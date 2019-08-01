@@ -1,13 +1,13 @@
 import sys, time, functools
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, \
-                            QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, \
+                            QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QCheckBox, \
                             QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout
 from CourseFetcher import WorkerObject
-from CourseFetcher import Catalogue
-from CourseFetcher import Course
+from CourseWidget import Catalogue
+from CourseWidget import Course
 from CourseWidget import CourseWidget
-from CategoryWidget import CategoryWidget
+#from CategoryWidget import CategoryWidget
 
 class MainWindow(QMainWindow):
 
@@ -20,11 +20,12 @@ class MainWindow(QMainWindow):
         self.personalHeight = 5
         self.timeout = 30
         self.fetchIncrement = 20
-        self.height = 780
-        self.width = 1400
+        self.height = 600
+        self.width = 1200
         self.catalogues = []
         self.entryLists = []
         self.personalLists = []
+        self.personalListsTitles = []
         self.catalogueLetters = ['A', 'B', 'C', 'D']
 
         self.initUI()
@@ -85,7 +86,8 @@ class MainWindow(QMainWindow):
             l.setDragEnabled(False)
             l.setDefaultDropAction(QtCore.Qt.IgnoreAction)
             l.setSelectionMode(QAbstractItemView.SingleSelection)
-            l.itemDoubleClicked.connect(self.addPersonalItem)
+            l.itemDoubleClicked.connect(self.listItemDoubleClicked)
+            l.keyPressEvent = self.keyPressEventAddPersonalCourse
             self.tabWidget.addTab(l, self.catalogueLetters[index])
 
         gridLayout.addWidget(self.tabWidget, 0, 1, self.entryListsWidth, self.entryListsHeight)
@@ -103,7 +105,9 @@ class MainWindow(QMainWindow):
             l.setDragEnabled(False)
             l.setDefaultDropAction(QtCore.Qt.IgnoreAction)
             l.setSelectionMode(QAbstractItemView.SingleSelection)
-            l.itemDoubleClicked.connect(self.removePersonalItem)
+            l.setObjectName("Personal WFK " + self.catalogueLetters[index] + " list")
+            l.itemDoubleClicked.connect(self.personalItemDoubleClicked)
+            l.keyPressEvent = self.keyPressEventDeleteCourse
             
             row = 0
             col = self.entryListsWidth + 1 + self.personalWidth
@@ -114,10 +118,18 @@ class MainWindow(QMainWindow):
 
             vlayout = QVBoxLayout()
             titleLabel = QLabel("WFK " + self.catalogueLetters[index], self)
+            self.personalListsTitles.append(titleLabel)
             #titleLabel.resize(250, 25)
             vlayout.addWidget(titleLabel)
             vlayout.addWidget(l)
             gridLayout.addLayout(vlayout, row, col, self.personalWidth, self.personalHeight)
+
+        self.toggleCourseNumbers = QCheckBox("Hide numbers", self)
+        self.toggleCourseNumbers.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_NUMBER, hidden))
+        gridLayout.addWidget(self.toggleCourseNumbers, 4, 0)
+        self.toggleCourseHours = QCheckBox("Hide hours", self)
+        self.toggleCourseHours.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_HOURS, hidden))
+        gridLayout.addWidget(self.toggleCourseHours, 5, 0)
 
         self.resize(self.width, self.height)
         qr = self.frameGeometry()
@@ -125,36 +137,9 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
-
         
-        ca = Catalogue("TestA")
-        cb = Catalogue("TestB")
-        cc = Catalogue("TestC")
-        cd = Catalogue("TestD")
-
-        ca1 = Course("000.000", "VO", "2019W", "TestName1", 3.0, 3.0, "test.com")
-        ca2 = Course("000.000", "VO", "2019W", "TestName11", 3.0, 3.0, "test.com")
-        cb1 = Course("000.000", "VO", "2019W", "TestName2", 3.0, 3.0, "test.com")
-        cc1 = Course("000.000", "VO", "2019W", "TestName3", 3.0, 3.0, "test.com")
-        cd1 = Course("000.000", "VO", "2019W", "TestName4", 3.0, 3.0, "test.com")
-
-        ca.courses.append(ca1)
-        ca.courses.append(ca2)
-        cb.courses.append(cb1)
-        cc.courses.append(cc1)
-        cd.courses.append(cd1)
-
-        self.catalogues.append(ca)
-        self.catalogues.append(cb)
-        self.catalogues.append(cc)
-        self.catalogues.append(cd)
-
-        self.addNewCourseCopy(self.entryLists[0], ca1)
-        self.addNewCourseCopy(self.entryLists[0], ca2)
-        self.addNewCourseCopy(self.entryLists[1], cb1)
-        self.addNewCourseCopy(self.entryLists[2], cc1)
-        self.addNewCourseCopy(self.entryLists[3], cd1)
-
+        self.addTestCourses()
+        self.updateTitles()
 
     def setupWorkerThread(self):
         # Setup the worker object and the worker_thread.
@@ -179,11 +164,25 @@ class MainWindow(QMainWindow):
                 worker_thread.terminate()
                 worker_thread.wait()"""
 
-    def addNewCourseCopy(self, targetList, course):
-        self.addNewCourse(targetList, course.number, course.courseType, course.semester, course.name, course.hours, course.credits, course.link)
+    def setCourseInfoHidden(self, infoIdx, hidden):
+        for index, catalogue in enumerate(self.catalogues):
+            for i in range(self.entryLists[index].count()):
+                widget = self.getItemWidget(self.entryLists[index], i)
+                widget.setInfoHidden(infoIdx, hidden)
+            for i in range(self.personalLists[index].count()):
+                widget = self.getItemWidget(self.personalLists[index], i)
+                widget.setInfoHidden(infoIdx, hidden)
 
-    def addNewCourse(self, targetList, number, courseType, semester, name, hours, credits, link):
-        itemWidget = CourseWidget(number, courseType, semester, name, hours, credits, link)
+    def addTestCourses(self):
+        for idx, letter in enumerate(self.catalogueLetters):
+            c = Catalogue("Test"+letter)
+            ca = Course("000.000", "VO", "2019W", "TestName"+str(idx), 3.0, 3.0, "test.com")
+            c.courses.append(ca)
+            self.catalogues.append(c)
+            self.addNewCourse(self.entryLists[idx], ca)
+        
+    def addNewCourse(self, targetList, course):
+        itemWidget = CourseWidget(course)
         item = QListWidgetItem()
         row = targetList.count()
         targetList.insertItem(row, item)
@@ -194,26 +193,67 @@ class MainWindow(QMainWindow):
         item = targetList.item(idx)
         return targetList.itemWidget(item)
 
-    def addPersonalItem(self, item):
+    def keyPressEventAddPersonalCourse(self, e):
+        super().keyPressEvent(e)
+        if e.key() != QtCore.Qt.Key_Return:
+            return
+
+        tabIdx = self.tabWidget.currentIndex()
+        originList = self.entryLists[tabIdx]
+        if len(originList.selectedItems()) == 0:
+            return
+        
+        item = originList.selectedItems()[0]
+        targetList = self.personalLists[tabIdx]
+        self.tryAddPersonalCourse(targetList, originList, item)
+
+    def listItemDoubleClicked(self, item):
         originList = self.sender()
-
-        courseIdx = originList.indexFromItem(item).row()
         catalogueIdx = self.entryLists.index(originList)
-        course = self.catalogues[catalogueIdx].courses[courseIdx]
-
         targetList = self.personalLists[catalogueIdx]
+        self.tryAddPersonalCourse(targetList, originList, item)
 
+    def tryAddPersonalCourse(self, targetList, originList, originItem):
+        course = originList.itemWidget(originItem).course
         for i in range(targetList.count()):
             itemWidget = self.getItemWidget(targetList, i)
-            if itemWidget.t == course.t:
+            if itemWidget.course.sameAs(course):
+                return
+        self.addNewCourse(targetList, course)
+        self.updateTitles()
+
+    def keyPressEventDeleteCourse(self, e):
+        super().keyPressEvent(e)
+        if e.key() != QtCore.Qt.Key_Backspace:
+            return
+
+        for i, l in enumerate(self.personalLists):
+            if l.hasFocus() and len(l.selectedItems()) == 1:
+                item = l.selectedItems()[0]
+                self.removeItemFromPersonal(l, item)
                 return
 
-        self.addNewCourseCopy(targetList, course)
-
-    def removePersonalItem(self, item):
+    def personalItemDoubleClicked(self, item):
         originList = self.sender()
-        courseIdx = originList.indexFromItem(item).row()
-        originList.takeItem(courseIdx)
+        self.removeItemFromPersonal(originList, item)        
+
+    def removeItemFromPersonal(self, personalList, item):
+        courseIdx = personalList.indexFromItem(item).row()
+        personalList.takeItem(courseIdx)
+        self.updateTitles()
+
+    def updateTitles(self):
+        for index, catalogue in enumerate(self.catalogues):
+            credits = 0
+            for i in range(self.entryLists[index].count()):
+                widget = self.getItemWidget(self.entryLists[index], i)
+                credits += widget.course.credits
+            self.tabWidget.setTabText(index, self.catalogueLetters[index] + " (" + str(credits) + ")")
+            credits = 0
+            for i in range(self.personalLists[index].count()):
+                widget = self.getItemWidget(self.personalLists[index], i)
+                credits += widget.course.credits
+            self.personalListsTitles[index].setText("WFK " + self.catalogueLetters[index] + " (" + str(credits) + ")")
 
     @QtCore.pyqtSlot()
     def prepareFetching(self):
@@ -224,6 +264,7 @@ class MainWindow(QMainWindow):
         for l in self.entryLists:
             l.clear()
             l.setEnabled(False)
+            self.updateTitles()
         self.startTime = time.time()
 
     @QtCore.pyqtSlot(str)
@@ -241,7 +282,7 @@ class MainWindow(QMainWindow):
         for index, c in enumerate(catalogues):
             currentListWidget = self.entryLists[index]
             for i, co in enumerate(c.courses):
-                self.addNewCourse(currentListWidget, co.number, co.courseType, co.semester, co.name, co.hours, co.credits, co.link)
+                self.addNewCourse(currentListWidget, co)
                 self.label.setText("Importing \"WFK %s\"...(%i/%i)"%(self.catalogueLetters[index], i, len(c.courses)))
                 self.progressBar.setValue(int(float(i/len(c.courses))*100))
                 QtWidgets.qApp.processEvents()
@@ -251,6 +292,7 @@ class MainWindow(QMainWindow):
             l.setEnabled(True)
         self.semesterSelectBox.setEnabled(True)
         self.progressBar.setValue(1)
+        self.updateTitles()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

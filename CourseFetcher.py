@@ -1,6 +1,4 @@
-from collections import deque
 from selenium import webdriver
-from bs4 import BeautifulSoup
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
@@ -8,31 +6,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from collections import deque
+from bs4 import BeautifulSoup
 from PyQt5 import QtCore
+from CourseWidget import Course
+from CourseWidget import Catalogue
 
 coursesURL = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=43093&semester=NEXT"
 linkprefix = "https://tiss.tuwien.ac.at"
 ignoredRows = ["Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessuren", "Wahlfachkataloge", "LVA-Nummern dazu", "Gebundener WFK D) Angewandte Physik (Fortsetzung)"]
 
-class Catalogue:
-    def __init__(self, name):
-        self.name = name
-        self.courses = []
-    
-    def isEmpty(self):
-        return len(self.courses) == 0
 
-class Course:
-    def __init__(self, number, name, courseType, semester, link, hours, credits):
-        self.number = number
-        self.name = name
-        self.courseType = courseType
-        self.semester = semester
-        self.link = link
-        self.hours = hours
-        self.credits = credits
-        self.t = self.number + " " + self.courseType + " " + self.semester + " " + self.name + " " + \
-                            str(self.hours) + "h " + str(self.credits) + "c"
 def isCatalogue(element):
     return 'WFK' in element.text
 def isCourse(element):
@@ -161,7 +145,7 @@ class WorkerObject(QtCore.QObject):
                 aunts = entry.parent.parent.findChildren("td", recursive=False)
                 hours = float(aunts[2].text.strip())
                 credits = float(aunts[3].text.strip()) 
-                newCourse = Course(number, name, courseType, semester, link, hours, credits)
+                newCourse = Course(number, courseType, semester, name, hours, credits, link)
                 curCatalogue.courses.append(newCourse)         
             else:
                 print("ERROR: Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
