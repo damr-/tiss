@@ -1,4 +1,3 @@
-WFK C (Kondensierte Materie)    Typ ECTS
 Advanced Theory of Superconductivity and Magnetism  VO  3,0
 Computational Materials Science VU  6,0
 Computational Physics   VO  3,0

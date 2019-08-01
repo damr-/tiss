@@ -24,6 +24,11 @@ class Course:
                 self.courseType == otherCourse.courseType and self.semester == otherCourse.semester and \
                 self.link == otherCourse.link and self.hours == otherCourse.hours and self.credits == otherCourse.credits
 
+    def existsInCurriculum(self, curriculumCatalogue):
+        for course in curriculumCatalogue:
+            if course.name == self.name and course.courseType == self.courseType and course.credits == self.credits:
+                return True
+        return False
     
 class CourseWidget(QWidget):
 
@@ -42,6 +47,9 @@ class CourseWidget(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(3)
 
+        self.feedbackLabel = QLabel("", self)
+        self.layout.addWidget(self.feedbackLabel)
+
         self.numberLabel = QLabel(self.course.number, self)
         self.layout.addWidget(self.numberLabel)
 
@@ -59,9 +67,6 @@ class CourseWidget(QWidget):
         
         self.creditsLabel = QLabel(str(self.course.credits)+"c", self)
         self.layout.addWidget(self.creditsLabel)
-
-        self.linkLabel = QLabel(self.course.link, self)
-        self.layout.addWidget(self.linkLabel)
         
         self.label2 = QLabel("<a href=\"" + str(self.course.link) + "\">TISS</a>", self)
         self.label2.setTextFormat(QtCore.Qt.RichText);
@@ -81,3 +86,14 @@ class CourseWidget(QWidget):
     def setInfoHidden(self, infoIdx, hide):
         self.hideableInfos[infoIdx].setVisible(not hide)
         CourseWidget.hiddenInfo[infoIdx] = hide
+
+    def setFeedback(self, positive):
+        color = "red"
+        if positive:
+            color = "green"
+        self.feedbackLabel.setStyleSheet("QLabel { background-color : "+color+"; }")#" color : blue; }")
+        self.feedbackLabel.update()
+
+    def setNeutral(self):
+        self.feedbackLabel.setStyleSheet("")#QLabel { background-color : none; }")
+        self.feedbackLabel.update()

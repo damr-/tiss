@@ -1,4 +1,3 @@
-WFK A (Theoretische Physik) Typ ECTS
 Advanced Atomic Theory  VO  3,0
 Theoretical Quantum Optics  VO  3,0
 Arbeitsgemeinschaft für fundamentale Wechselwirkungen I PR  3,0

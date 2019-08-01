@@ -1,4 +1,3 @@
-WFK D (Angewandte Physik)   Typ ECTS
 Archäometrie: Datierung, Spurenelement-Bestimmung   LU  2,0
 Archäometrie: Physikalische Methoden der Altersbestimmung   VO  3,0
 Atomare Stoßprozesse    VO  3,0

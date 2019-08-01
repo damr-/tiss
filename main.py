@@ -7,7 +7,6 @@ from CourseFetcher import WorkerObject
 from CourseWidget import Catalogue
 from CourseWidget import Course
 from CourseWidget import CourseWidget
-#from CategoryWidget import CategoryWidget
 
 class MainWindow(QMainWindow):
 
@@ -15,9 +14,9 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.entryListsWidth = 15
-        self.entryListsHeight = 10
+        self.entryListsHeight = 8
         self.personalWidth = 5
-        self.personalHeight = 5
+        self.personalHeight = 4
         self.timeout = 30
         self.fetchIncrement = 20
         self.height = 600
@@ -131,6 +130,14 @@ class MainWindow(QMainWindow):
         self.toggleCourseHours.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_HOURS, hidden))
         gridLayout.addWidget(self.toggleCourseHours, 5, 0)
 
+        self.checkCurriculumButton = QPushButton("Check curriculum", self)
+        self.checkCurriculumButton.clicked.connect(self.checkCurriculum)
+        gridLayout.addWidget(self.checkCurriculumButton, 6, 0)
+
+        self.clearCheckButton = QPushButton("Clear color", self)
+        self.clearCheckButton.clicked.connect(self.clearCurriculumFeedback)
+        gridLayout.addWidget(self.clearCheckButton, 7, 0)
+
         self.resize(self.width, self.height)
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -172,6 +179,12 @@ class MainWindow(QMainWindow):
             for i in range(self.personalLists[index].count()):
                 widget = self.getItemWidget(self.personalLists[index], i)
                 widget.setInfoHidden(infoIdx, hidden)
+
+    def clearCurriculumFeedback(self):
+        for index, catalogue in enumerate(self.catalogues):
+            for i in range(self.entryLists[index].count()):
+                widget = self.getItemWidget(self.entryLists[index], i)
+                widget.setNeutral()
 
     def addTestCourses(self):
         for idx, letter in enumerate(self.catalogueLetters):
@@ -254,6 +267,28 @@ class MainWindow(QMainWindow):
                 widget = self.getItemWidget(self.personalLists[index], i)
                 credits += widget.course.credits
             self.personalListsTitles[index].setText("WFK " + self.catalogueLetters[index] + " (" + str(credits) + ")")
+
+    def checkCurriculum(self):
+        folder = "WFK/"
+
+        for index, catalogue in enumerate(self.catalogues):
+            curriculumCatalogue = open(folder + "WFK_" + self.catalogueLetters[index] + ".txt", 'r')
+            curriculumCourses = []
+            for line in curriculumCatalogue:
+                parts = line.strip().split(' ')
+                courseType = parts[-3]
+                courseCredits = parts[-1]
+                courseName = (' '.join(parts[:-4])).strip()
+                curriculumCourses.append(Course("", courseType, "", courseName, 0.0, courseCredits, ""))
+
+            for i in range(self.entryLists[index].count()):
+                widget = self.getItemWidget(self.entryLists[index], i)
+                course = widget.course
+                if not course.existsInCurriculum(curriculumCourses):
+                    print("'" + course.name + "' not found in WFK " + self.catalogueLetters[index])
+                    widget.setFeedback(False)
+                else:
+                    widget.setFeedback(True)
 
     @QtCore.pyqtSlot()
     def prepareFetching(self):
