@@ -16,7 +16,6 @@ coursesURL = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=4
 linkprefix = "https://tiss.tuwien.ac.at"
 ignoredRows = ["Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessuren", "Wahlfachkataloge", "LVA-Nummern dazu", "Gebundener WFK D) Angewandte Physik (Fortsetzung)"]
 
-
 def isCatalogue(element):
     return 'WFK' in element.text
 def isCourse(element):
@@ -122,9 +121,6 @@ class WorkerObject(QtCore.QObject):
         catalogues = []
         i=0
         curCatalogue = None
-        skippingVertiefung2 = False
-        foundFirstFreieWF = False
-        skippingModulProjektarbeit = False
 
         for entry in entries:
             self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i+1), len(entries)))

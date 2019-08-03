@@ -1,7 +1,9 @@
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QWidget, QLabel, QSizePolicy, QHBoxLayout, QFrame, QLayout
 
 class Catalogue:
+    catalogueLetters = ['A', 'B', 'C', 'D']
+
     def __init__(self, name):
         self.name = name
         self.courses = []
@@ -15,8 +17,8 @@ class Course:
         self.courseType = courseType
         self.semester = semester
         self.name = name
-        self.hours = hours
-        self.credits = credits
+        self.hours = float(hours)
+        self.credits = float(credits)
         self.link = link
 
     def sameAs(self, otherCourse):
@@ -25,10 +27,17 @@ class Course:
                 self.link == otherCourse.link and self.hours == otherCourse.hours and self.credits == otherCourse.credits
 
     def existsInCurriculum(self, curriculumCatalogue):
+        reason = 0
         for course in curriculumCatalogue:
-            if course.name == self.name and course.courseType == self.courseType and course.credits == self.credits:
-                return True
-        return False
+            if course.name == self.name:
+                if course.courseType == self.courseType:
+                    if course.credits == self.credits:
+                        return -1
+                    else:
+                        reason = 2
+                else:
+                    reason = 1
+        return reason
     
 class CourseWidget(QWidget):
 
@@ -36,13 +45,13 @@ class CourseWidget(QWidget):
     HIDE_HOURS = 1
     hiddenInfo = { HIDE_NUMBER: False, HIDE_HOURS: False }
 
-    def __init__(self, course):
+    def __init__(self, course, isPersonal):
         super().__init__()
         self.course = course
         self.hideableInfos = []
-        self.initUI()
+        self.initUI(isPersonal)
         
-    def initUI(self):        
+    def initUI(self, isPersonal):
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(3)
@@ -83,17 +92,27 @@ class CourseWidget(QWidget):
             if value:
                 self.hideableInfos[idx].setVisible(False)
 
+        if isPersonal:
+            self.feedbackLabel.setVisible(False)
+
     def setInfoHidden(self, infoIdx, hide):
         self.hideableInfos[infoIdx].setVisible(not hide)
         CourseWidget.hiddenInfo[infoIdx] = hide
 
-    def setFeedback(self, positive):
+    def setNegativeFeedback(self, reason):
+        textStyle = "QLabel { color : red; }"
         color = "red"
-        if positive:
-            color = "green"
-        self.feedbackLabel.setStyleSheet("QLabel { background-color : "+color+"; }")#" color : blue; }")
-        self.feedbackLabel.update()
+        if reason == 1:
+            self.typeLabel.setStyleSheet(textStyle)
+            color = "orange"
+        elif reason == 2:
+            self.creditsLabel.setStyleSheet(textStyle)
+            color = "orange"
+        self.feedbackLabel.setStyleSheet("QLabel { background-color : " + color + "; }")
+        self.feedbackLabel.repaint()
 
     def setNeutral(self):
-        self.feedbackLabel.setStyleSheet("")#QLabel { background-color : none; }")
-        self.feedbackLabel.update()
+        self.feedbackLabel.setStyleSheet("")
+        self.typeLabel.setStyleSheet("")
+        self.creditsLabel.setStyleSheet("")
+        self.feedbackLabel.repaint()

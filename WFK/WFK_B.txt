@@ -1,82 +1,81 @@
-Advanced Atomic Theory  VO  3,0
-Arbeitsgemeinschaft für fundamentale Wechselwirkungen I PR  3,0
-Arbeitsgemeinschaft für fundamentale Wechselwirkungen II    PR  3,0
-Archäometrie: Datierung, Spurenelement-Bestimmung   LU  2,0
-Archäometrie: Physikalische Methoden der Altersbestimmung   VO  3,0
-Astro-Teilchenphysik    VO  3,0
-Atom-, Kern- und Teilchenphysik II  UE  2,0
-Atomare Stoßprozesse    VO  3,0
-Atoms - Light - Matter Waves    VO  3,0
-Attosekundenphysik  VO  3,0
-Biologische Strahleneffekte VO  1,5
-Black Holes I   VO  3,0
-Black Holes II  VO  3,0
-Data Analysis of Experiments with Particle Detectors    VO  3,0
-Der Laser in Physik, Chemie, Biologie und Medizin   VO  3,0
-Einführung in die Plasmaphysik und -technik VO  3,0
-Einführung in die Teilchenphysik    VO  3,0
-Elektrodynamik II   UE  1,0
-Fundamental Physics with Coherent X-Rays and Neutrons   VO  3,0
-Fundamental Physics with Polarized Neutrons VO  3,0
-Fusionstechnologie  VO  1,5
-Gammaspektrometrie  VO  3,0
-Gittereichtheorie   VO  3,0
-Grundlagen der Plasmatheorie    VO  3,0
-Grundlagen der Teilchendetektoren   VO  3,0
-Ionen-Festkörper-Wechselwirkungen   VO  3,0
-Kosmologie und Teilchenphysik   VO  3,0
-Literaturseminar Theoretische Quantendynamik    SE  3,0
-Macroscopic Quantum Systems VO  3,0
-Mehrteilchensysteme VO  3,0
-Methods of Quantitative X-ray Fluorescence Analysis VO  3,0
-Neutronen und Kernphysik    VO  3,0
-Neutronen- und Festkörperphysik VO  3,0
-Neutronen- und Röntgendiffraktometrie   VO  3,0
-Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie VO  3,0
-Phänomenologische Teilchenphysik    VU  3,0
-Physics of Exotic Atoms VO  3,0
-Physik am LHC: Vermessung des Higgs-Bosons und Suche nach Physik        
-jenseits des Standardmodells    VO  3,0
-Physik und Anwendung ultrakurzer Lichtimpulse   VO  3,0
-Physikalische Grundlagen des Kernfusionsreaktors    VO  3,0
-Plasmatechnologie und -chemie   VO  3,0
-Practical Course in X-Ray Analytical Methods    LU  2,0
-Praktikum aus Neutronenphysik   LU  4,0
-Praktische Übungen am Reaktor   LU  4,0
-Praktische Übungen aus Strahlenphysik   LU  4,0
-Präzisionsmessungen mit schweren Mesonen    VO  3,0
-Quanten-Interferometrie im Phasenraum I VO  3,0
-Quanten-Interferometrie im Phasenraum II    VO  3,0
-Quantenchromodynamik I  VO  3,0
-Quantenchromodynamik II VO  3,0
-Quantum Information Physics VO  3,0
-Quantenoptik I  VO  3,0
-Quantenoptik II VO  3,0
-Quantenphysik   LU  5,0
-Quantentechnologien I   VO  3,0
-Quantentechnologien II  VO  3,0
-Radionuklidbestimmung in Umweltproben   LU  4,0
-Radioökologie   VO  3,0
-Rechenmethoden des Strahlenschutzes I   UE  1,0
-Rechenmethoden des Strahlenschutzes II  UE  1,0
-Seminar aus Allgemeiner Physik  SE  2,0
-Seminar für Theoretische Physik 1   SE  2,0
-Seminar für Theoretische Physik 2   SE  2,0
-Seminar über Atomare und Subatomare Physik  SE  2,0
-Seminar über neue Arbeiten am Atominstitut  SE  2,0
-Solitonen, Differentialgeometrie und Topologie  VO  3,0
-Spezialverfahren der Röntgenfluoreszenzanalyse  VO  3,0
-Strahlenphysik  VO  4,5
-Strahlenphysikalische Anwendungen in Technik und Medizin    SE  2,0
-Strahlenphysikalische Methoden in der Medizin   VO  3,0
-Streu- und Reaktionstheorie VO  3,0
-Suche nach der Dunklen Materie  VO  3,0
-Technischer Strahlenschutz I    VO  3,0
-Technischer Strahlenschutz II   VO  3,0
-Teilchenbeschleuniger   VO  3,0
-Teilchenphysik, Stand und Perspektiven  VO  3,0
-Theoretical Particle Physics    VO  3,0
-Thermische Quantenfeldtheorie   VO  3,0
-Time-Dependent Many-Body Systems    VO  3,0
-Weltraumdosimetrie  VO  1,5
-X-Ray Analytical Methods    VO  3,0
+Advanced Atomic Theory|VO|3.0
+Arbeitsgemeinschaft für fundamentale Wechselwirkungen I|PR|3.0
+Arbeitsgemeinschaft für fundamentale Wechselwirkungen II|PR|3.0
+Archäometrie: Datierung, Spurenelement-Bestimmung|LU|2.0
+Archäometrie: Physikalische Methoden der Altersbestimmung|VO|3.0
+Astro-Teilchenphysik|VO|3.0
+Atom-, Kern- und Teilchenphysik II|UE|2.0
+Atomare Stoßprozesse|VO|3.0
+Atoms - Light - Matter Waves|VO|3.0
+Attosekundenphysik|VO|3.0
+Biologische Strahleneffekte|VO|1.5
+Black Holes I|VO|3.0
+Black Holes II|VO|3.0
+Data Analysis of Experiments with Particle Detectors|VO|3.0
+Der Laser in Physik, Chemie, Biologie und Medizin|VO|3.0
+Einführung in die Plasmaphysik und -technik|VO|3.0
+Einführung in die Teilchenphysik|VO|3.0
+Elektrodynamik II|UE|1.0
+Fundamental Physics with Coherent X-Rays and Neutrons|VO|3.0
+Fundamental Physics with Polarized Neutrons|VO|3.0
+Fusionstechnologie|VO|1.5
+Gammaspektrometrie|VO|3.0
+Gittereichtheorie|VO|3.0
+Grundlagen der Plasmatheorie|VO|3.0
+Grundlagen der Teilchendetektoren|VO|3.0
+Ionen-Festkörper-Wechselwirkungen|VO|3.0
+Kosmologie und Teilchenphysik|VO|3.0
+Literaturseminar Theoretische Quantendynamik|SE|3.0
+Macroscopic Quantum Systems|VO|3.0
+Mehrteilchensysteme|VO|3.0
+Methods of Quantitative X-ray Fluorescence Analysis|VO|3.0
+Neutronen und Kernphysik|VO|3.0
+Neutronen- und Festkörperphysik|VO|3.0
+Neutronen- und Röntgendiffraktometrie|VO|3.0
+Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie|VO|3.0
+Phänomenologische Teilchenphysik|VU|3.0
+Physics of Exotic Atoms|VO|3.0
+Physik am LHC: Vermessung des Higgs-Bosons und Suche nach Physik jenseits des Standardmodells|VO|3.0
+Physik und Anwendung ultrakurzer Lichtimpulse|VO|3.0
+Physikalische Grundlagen des Kernfusionsreaktors|VO|3.0
+Plasmatechnologie und -chemie|VO|3.0
+Practical Course in X-Ray Analytical Methods|LU|2.0
+Praktikum aus Neutronenphysik|LU|4.0
+Praktische Übungen am Reaktor|LU|4.0
+Praktische Übungen aus Strahlenphysik|LU|4.0
+Präzisionsmessungen mit schweren Mesonen|VO|3.0
+Quanten-Interferometrie im Phasenraum I|VO|3.0
+Quanten-Interferometrie im Phasenraum II|VO|3.0
+Quantenchromodynamik I|VO|3.0
+Quantenchromodynamik II|VO|3.0
+Quantum Information Physics|VO|3.0
+Quantenoptik I|VO|3.0
+Quantenoptik II|VO|3.0
+Quantenphysik|LU|5.0
+Quantentechnologien I|VO|3.0
+Quantentechnologien II|VO|3.0
+Radionuklidbestimmung in Umweltproben|LU|4.0
+Radioökologie|VO|3.0
+Rechenmethoden des Strahlenschutzes I|UE|1.0
+Rechenmethoden des Strahlenschutzes II|UE|1.0
+Seminar aus Allgemeiner Physik|SE|2.0
+Seminar für Theoretische Physik 1|SE|2.0
+Seminar für Theoretische Physik 2|SE|2.0
+Seminar über Atomare und Subatomare Physik|SE|2.0
+Seminar über neue Arbeiten am Atominstitut|SE|2.0
+Solitonen, Differentialgeometrie und Topologie|VO|3.0
+Spezialverfahren der Röntgenfluoreszenzanalyse|VO|3.0
+Strahlenphysik|VO|4.5
+Strahlenphysikalische Anwendungen in Technik und Medizin|SE|2.0
+Strahlenphysikalische Methoden in der Medizin|VO|3.0
+Streu- und Reaktionstheorie|VO|3.0
+Suche nach der Dunklen Materie|VO|3.0
+Technischer Strahlenschutz I|VO|3.0
+Technischer Strahlenschutz II|VO|3.0
+Teilchenbeschleuniger|VO|3.0
+Teilchenphysik, Stand und Perspektiven|VO|3.0
+Theoretical Particle Physics|VO|3.0
+Thermische Quantenfeldtheorie|VO|3.0
+Time-Dependent Many-Body Systems|VO|3.0
+Weltraumdosimetrie|VO|1.5
+X-Ray Analytical Methods|VO|3.0
