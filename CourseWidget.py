@@ -44,6 +44,7 @@ class CourseWidget(QWidget):
     HIDE_NUMBER = 0
     HIDE_HOURS = 1
     hiddenInfo = { HIDE_NUMBER: False, HIDE_HOURS: False }
+    greyStyleSheet = "QLabel {color : grey}"
 
     def __init__(self, course, isPersonal):
         super().__init__()
@@ -77,13 +78,13 @@ class CourseWidget(QWidget):
         self.creditsLabel = QLabel(str(self.course.credits)+"c", self)
         self.layout.addWidget(self.creditsLabel)
         
-        self.label2 = QLabel("<a href=\"" + str(self.course.link) + "\">TISS</a>", self)
-        self.label2.setTextFormat(QtCore.Qt.RichText);
-        self.label2.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction);
-        self.label2.setOpenExternalLinks(True);
+        self.linkLabel = QLabel("<a href=\"" + str(self.course.link) + "\">TISS</a>", self)
+        self.linkLabel.setTextFormat(QtCore.Qt.RichText);
+        self.linkLabel.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction);
+        self.linkLabel.setOpenExternalLinks(True);
         
         self.layout.setSizeConstraint(QLayout.SetFixedSize);
-        self.layout.addWidget(self.label2)
+        self.layout.addWidget(self.linkLabel)
 
         self.hideableInfos.append(self.numberLabel)
         self.hideableInfos.append(self.hoursLabel)
@@ -95,11 +96,27 @@ class CourseWidget(QWidget):
         if isPersonal:
             self.feedbackLabel.setVisible(False)
 
+    def setGreyedOut(self, greyedOut):
+        self.removeFeedback()
+        ss = ""
+        if greyedOut:
+            ss = CourseWidget.greyStyleSheet
+        self.setStyleSheet(ss)
+
+    def setHighlit(self, highlit):
+        self.setStyleSheet("")
+        ss = ""
+        if highlit:
+            ss = "QLabel { background-color: yellow; }"
+        self.feedbackLabel.setStyleSheet(ss)
+        self.feedbackLabel.repaint()
+
     def setInfoHidden(self, infoIdx, hide):
         self.hideableInfos[infoIdx].setVisible(not hide)
         CourseWidget.hiddenInfo[infoIdx] = hide
 
     def setNegativeFeedback(self, reason):
+        self.setHighlit(False)
         textStyle = "QLabel { color : red; }"
         color = "red"
         if reason == 1:
@@ -108,11 +125,11 @@ class CourseWidget(QWidget):
         elif reason == 2:
             self.creditsLabel.setStyleSheet(textStyle)
             color = "orange"
-        self.feedbackLabel.setStyleSheet("QLabel { background-color : " + color + "; }")
+        self.feedbackLabel.setStyleSheet("QLabel { background-color: " + color + "; }")
         self.feedbackLabel.repaint()
 
-    def setNeutral(self):
+    def removeFeedback(self):
         self.feedbackLabel.setStyleSheet("")
         self.typeLabel.setStyleSheet("")
         self.creditsLabel.setStyleSheet("")
-        self.feedbackLabel.repaint()
+        self.repaint()

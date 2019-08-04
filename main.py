@@ -1,13 +1,13 @@
-import sys, time, functools
+import sys, time, functools, datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, QMessageBox, \
-                            QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QCheckBox, \
-                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, QMessageBox, QLineEdit, \
+                            QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QCheckBox, QGroupBox, QShortcut, \
+                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout, QHBoxLayout
 from CourseFetcher import WorkerObject
 from CourseWidget import Catalogue
 from CourseWidget import Course
 from CourseWidget import CourseWidget
-from CourseStorer import CourseStorer
+from FileManager import FileManager
 
 class MainWindow(QMainWindow):
 
@@ -19,11 +19,12 @@ class MainWindow(QMainWindow):
         self.height = 600
         self.width = 1200
 
-        self.tissCataloguesWidth = 15
-        self.tissCataloguesHeight = 8
-        self.personalCatalogueWidth = 5
-        self.personalCatalogueHeight = 4
-        
+        self.tissCataloguesRows = 12
+        self.tissCataloguesCols = 4
+        self.personalCatalogueRowsFirst = 4
+        self.personalCatalogueRowsSecond = 8
+        self.personalCatalogueCols = 1
+    
         self.tissCatalogues = []
         self.personalCatalogues = []
         self.personalCataloguesTitles = []
@@ -31,7 +32,13 @@ class MainWindow(QMainWindow):
         self.initUI()
         self.setupWorkerThread()
         self.loadCatalogues()
-    
+        settings = FileManager.loadSettings()
+        if len(settings) > 0:
+            self.lastFetchDateTime.setText(settings[0])
+            self.toggleCourseNumbers.setChecked(FileManager.str2bool(settings[1]))
+            self.toggleCourseHours.setChecked(FileManager.str2bool(settings[2]))
+            self.toggleQuestion.setChecked(FileManager.str2bool(settings[3]))
+
     def initUI(self):
         centralWidget = QWidget(self)
         self.setCentralWidget(centralWidget)
@@ -39,26 +46,50 @@ class MainWindow(QMainWindow):
         gridLayout = QGridLayout()
         centralWidget.setLayout(gridLayout)
 
+        fetchLayout = QVBoxLayout()
+        fetchLayout.setContentsMargins(0, 0, 0, 0)
+        fetchLayout.setSpacing(0)
+
+        hlayout = QHBoxLayout()
+        hlayout.setContentsMargins(0, 0, 0, 0)
+        hlayout.setSpacing(0)
         self.semesterSelectBox = QComboBox(self)
         self.semesterSelectBox.addItem("2019S")
         self.semesterSelectBox.addItem("2019W")
         self.semesterSelectBox.setCurrentIndex(1)
-        gridLayout.addWidget(self.semesterSelectBox, 0, 0)
+        hlayout.addWidget(self.semesterSelectBox)
 
         self.fetchButton = QPushButton("Fetch Courses", self)
-        self.fetchButton.resize(50, 50)
-        gridLayout.addWidget(self.fetchButton, 1, 0)
+        self.fetchButton.clicked.connect(self.prepareFetching)
+        hlayout.addWidget(self.fetchButton)
+        fetchLayout.addLayout(hlayout)
 
-        self.label = QLabel("<Status output>", self)
-        self.label.resize(250, 25)
-        gridLayout.addWidget(self.label, 2, 0)
+        self.statusOutput = QLabel("<Status output>", self)
+        fetchLayout.addWidget(self.statusOutput)
 
         self.progressBar = QProgressBar(self)
-        self.progressBar.resize(250, 50)
         self.progressBar.setRange(0, 100)
-        self.progressBar.setValue(0)
-        gridLayout.addWidget(self.progressBar, 3, 0)
-    
+        fetchLayout.addWidget(self.progressBar)
+
+        lastFetchLayout = QHBoxLayout()
+        lastFetchLayout.setContentsMargins(0, 0, 0, 0)
+        lastFetchLayout.setSpacing(0)
+        self.lastFetchTitle = QLabel("last fetch:", self)
+        font = self.lastFetchTitle.font()
+        font.setItalic(True)
+        font.setPointSize(10)
+        self.lastFetchTitle.setFont(font)
+        lastFetchLayout.addWidget(self.lastFetchTitle)
+        self.lastFetchDateTime = QLabel(self)
+        self.lastFetchDateTime.setFont(font)
+        lastFetchLayout.addWidget(self.lastFetchDateTime)
+        lastFetchLayout.addStretch(0)
+        fetchLayout.addLayout(lastFetchLayout)
+        
+        fetchGroup = QGroupBox()
+        fetchGroup.setLayout(fetchLayout)
+        gridLayout.addWidget(fetchGroup, 0, 0)
+
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(1)
@@ -77,11 +108,6 @@ class MainWindow(QMainWindow):
             l.setSizePolicy(sizePolicy)
             l.setMinimumSize(QtCore.QSize(50, 50))
             l.setObjectName("WFK " + Catalogue.catalogueLetters[index] + " list")
-            #self.tissCatalogue.setSizeIncrement(QtCore.QSize(1, 1))
-            #font =  QtGui.QFont()
-            #font.setPointSize(10)
-            #self.tissCatalogue.setFont(font)
-            #self.tissCatalogue.setStyleSheet("selection-background-color: rgb(159, 181, 255);")
             l.setEditTriggers(QAbstractItemView.NoEditTriggers)
             l.setDropIndicatorShown(False)
             l.setDragEnabled(False)
@@ -91,7 +117,7 @@ class MainWindow(QMainWindow):
             l.keyPressEvent = self.keyPressEventAddPersonalCourse
             self.tabWidget.addTab(l, Catalogue.catalogueLetters[index])
 
-        gridLayout.addWidget(self.tabWidget, 0, 1, self.tissCataloguesWidth, self.tissCataloguesHeight)
+        gridLayout.addWidget(self.tabWidget, 0, 1, self.tissCataloguesRows, self.tissCataloguesCols)
 
         self.personalCatalogueA, self.personalCatalogueB, self.personalCatalogueC, self.personalCatalogueD = (QListWidget(self) for i in range(4))
         self.personalCatalogues.append(self.personalCatalogueA)
@@ -111,34 +137,64 @@ class MainWindow(QMainWindow):
             l.keyPressEvent = self.keyPressEventDeleteCourse
             
             row = 0
-            col = self.tissCataloguesWidth + 1 + self.personalCatalogueWidth
+            rowSpan = self.personalCatalogueRowsFirst
+            col = self.tissCataloguesCols + 1 + self.personalCatalogueCols
             if index > 1:
-                row = self.personalCatalogueHeight + 1
+                row = self.personalCatalogueRowsFirst
+                rowSpan = self.personalCatalogueRowsSecond
             if index % 2 == 0:
-                col -= self.personalCatalogueWidth
+                col -= self.personalCatalogueCols
 
             vlayout = QVBoxLayout()
             titleLabel = QLabel("WFK " + Catalogue.catalogueLetters[index], self)
             self.personalCataloguesTitles.append(titleLabel)
-            #titleLabel.resize(250, 25)
             vlayout.addWidget(titleLabel)
             vlayout.addWidget(l)
-            gridLayout.addLayout(vlayout, row, col, self.personalCatalogueWidth, self.personalCatalogueHeight)
+            gridLayout.addLayout(vlayout, row, col, rowSpan, self.personalCatalogueCols)
 
-        self.toggleCourseNumbers = QCheckBox("Hide numbers", self)
-        self.toggleCourseNumbers.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_NUMBER, hidden))
-        gridLayout.addWidget(self.toggleCourseNumbers, 4, 0)
-        self.toggleCourseHours = QCheckBox("Hide hours", self)
-        self.toggleCourseHours.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_HOURS, hidden))
-        gridLayout.addWidget(self.toggleCourseHours, 5, 0)
+        searchLayout = QHBoxLayout()
+        #icon = QLabel("O", self)
+        #searchLayout.addWidget(icon)
+        searchText = QLineEdit("", self)
+        searchText.setPlaceholderText("Search...")
+        shortcut = QShortcut(QtGui.QKeySequence("Ctrl+F"), self)
+        shortcut.activated.connect(lambda: searchText.setFocus())
+        shortcut = QShortcut(QtGui.QKeySequence("Esc"), self)
+        shortcut.activated.connect(lambda: self.setFocus())
+        searchText.textEdited.connect(self.searchCourses)
+        searchLayout.addWidget(searchText)
+        searchGroup = QGroupBox()
+        searchGroup.setLayout(searchLayout)
+        gridLayout.addWidget(searchGroup, 1, 0)
 
+        curriculumLayout = QHBoxLayout()
+        curriculumLayout.setContentsMargins(0, 0, 0, 0)
         self.checkCurriculumButton = QPushButton("Check curriculum", self)
         self.checkCurriculumButton.clicked.connect(self.checkCurriculum)
-        gridLayout.addWidget(self.checkCurriculumButton, 6, 0)
+        curriculumLayout.addWidget(self.checkCurriculumButton)
 
-        self.clearCurriculumFeedbackButton = QPushButton("Clear color", self)
+        self.clearCurriculumFeedbackButton = QPushButton("Clear", self)
         self.clearCurriculumFeedbackButton.clicked.connect(self.clearCurriculumFeedback)
-        gridLayout.addWidget(self.clearCurriculumFeedbackButton, 7, 0)
+        curriculumLayout.addWidget(self.clearCurriculumFeedbackButton)
+        curriculumGroup = QGroupBox()
+        curriculumGroup.setLayout(curriculumLayout)
+        gridLayout.addWidget(curriculumGroup, 2, 0)
+
+        toggleLayout = QVBoxLayout()
+        toggleLayout.setContentsMargins(0, 0, 0, 0)
+        self.toggleCourseNumbers = QCheckBox("Hide numbers", self)
+        self.toggleCourseNumbers.setTristate(False)
+        self.toggleCourseNumbers.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_NUMBER, hidden))
+        toggleLayout.addWidget(self.toggleCourseNumbers)
+        self.toggleCourseHours = QCheckBox("Hide hours", self)
+        self.toggleCourseHours.setTristate(False)
+        self.toggleCourseHours.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_HOURS, hidden))
+        toggleLayout.addWidget(self.toggleCourseHours)
+        self.toggleQuestion = QCheckBox("Quit without asking", self)
+        toggleLayout.addWidget(self.toggleQuestion)
+        toggleGroup = QGroupBox()
+        toggleGroup.setLayout(toggleLayout)
+        gridLayout.addWidget(toggleGroup, 3, 0)
 
         self.resize(self.width, self.height)
         qr = self.frameGeometry()
@@ -147,7 +203,6 @@ class MainWindow(QMainWindow):
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
         
-        #self.addTestCourses()
         self.updateTitles()
 
     def setupWorkerThread(self):
@@ -160,7 +215,7 @@ class MainWindow(QMainWindow):
         # Connect any worker signals
         worker.doneSignal.connect(self.fetchingFinished)
         worker.updateSignal.connect(self.updateStatus)
-        self.fetchButton.clicked.connect(self.prepareFetching)
+
         self.fetchButton.clicked.connect(functools.partial(worker.startWork, self.semesterSelectBox.currentText(), self.timeout))
 
         #def connectSignals(self):
@@ -174,16 +229,42 @@ class MainWindow(QMainWindow):
                 worker_thread.wait()"""
 
     def closeEvent(self, event):
+        FileManager.storeSettings([self.lastFetchDateTime.text(), self.toggleCourseNumbers.isChecked(), self.toggleCourseHours.isChecked(), self.toggleQuestion.isChecked()])
+
+        if self.toggleQuestion.isChecked():
+            self.storeCourses()
+            event.accept()
+            return
+
         resBtn = QMessageBox.question( self, "Save?",
                                         "Do you want to save the courses?\n",
                                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
                                         QMessageBox.Yes)
         if resBtn == QMessageBox.Yes:
             self.storeCourses()
+            event.accept()
         elif resBtn == QMessageBox.No:
             event.accept()
         else:
             event.ignore()
+
+    def searchCourses(self, text):
+        text = text.strip()
+        for index in range(len(Catalogue.catalogueLetters)):
+            count = 0
+            for i in range(self.tissCatalogues[index].count()):
+                widget = self.getItemWidget(self.tissCatalogues[index], i)
+                if text == "":
+                    widget.setHighlit(False)
+                    widget.setGreyedOut(False)
+                elif text.lower() in widget.course.name.lower():
+                    widget.setHighlit(True)
+                    count += 1
+                else:
+                    widget.setGreyedOut(True)
+            self.tabWidget.setTabText(index, Catalogue.catalogueLetters[index] + " (" + str(count) + "/" + str(len(self.tissCatalogues[index])) + ")")
+        if text == "":
+            self.updateTitles()
 
     def setCourseInfoHidden(self, infoIdx, hidden):
         for index in range(len(Catalogue.catalogueLetters)):
@@ -193,12 +274,6 @@ class MainWindow(QMainWindow):
             for i in range(self.personalCatalogues[index].count()):
                 widget = self.getItemWidget(self.personalCatalogues[index], i)
                 widget.setInfoHidden(infoIdx, hidden)
-
-    def clearCurriculumFeedback(self):
-        for index in range(len(Catalogue.catalogueLetters)):
-            for i in range(self.tissCatalogues[index].count()):
-                widget = self.getItemWidget(self.tissCatalogues[index], i)
-                widget.setNeutral()
 
     def addTestCourses(self):
         for idx, letter in enumerate(Catalogue.catalogueLetters):
@@ -274,12 +349,12 @@ class MainWindow(QMainWindow):
             for i in range(self.tissCatalogues[index].count()):
                 widget = self.getItemWidget(self.tissCatalogues[index], i)
                 credits += widget.course.credits
-            self.tabWidget.setTabText(index, Catalogue.catalogueLetters[index] + " (" + str(credits) + ")")
+            self.tabWidget.setTabText(index, Catalogue.catalogueLetters[index] + " (" + str(len(self.tissCatalogues[index])) + ", " + str(credits) + ")")
             credits = 0
             for i in range(self.personalCatalogues[index].count()):
                 widget = self.getItemWidget(self.personalCatalogues[index], i)
                 credits += widget.course.credits
-            self.personalCataloguesTitles[index].setText("WFK " + Catalogue.catalogueLetters[index] + " (" + str(credits) + ")")
+            self.personalCataloguesTitles[index].setText("WFK " + Catalogue.catalogueLetters[index] + " (" + str(len(self.personalCatalogues[index])) + ", " + str(credits) + ")")
 
     def checkCurriculum(self):
         for index in range(len(Catalogue.catalogueLetters)):
@@ -299,9 +374,15 @@ class MainWindow(QMainWindow):
                 if val > -1:
                     widget.setNegativeFeedback(val)
 
+    def clearCurriculumFeedback(self):
+        for index in range(len(Catalogue.catalogueLetters)):
+            for i in range(self.tissCatalogues[index].count()):
+                widget = self.getItemWidget(self.tissCatalogues[index], i)
+                widget.removeFeedback()
+
     def loadCatalogues(self):
         self.setUIEnabled(False)
-        (allCatalogues, personalCatalogues) = CourseStorer.loadCourses()
+        (allCatalogues, personalCatalogues) = FileManager.loadCourses()
 
         for index, c in enumerate(allCatalogues):
             currentListWidget = self.tissCatalogues[index]
@@ -313,16 +394,16 @@ class MainWindow(QMainWindow):
             for i, co in enumerate(c.courses):
                 self.addNewCourse(currentListWidget, co, True)
 
-        self.label.setText("Courses loaded.")
+        self.statusOutput.setText("Courses loaded.")
         self.setUIEnabled(True)
         self.updateTitles()
 
     def storeCourses(self):
-        allCats = self.cataloguesFromLists(self.tissCatalogues)
-        personalCats = self.cataloguesFromLists(self.personalCatalogues)
-        CourseStorer.storeCourses(allCats, personalCats)
+        allCats = self.getCataloguesFromLists(self.tissCatalogues)
+        personalCats = self.getCataloguesFromLists(self.personalCatalogues)
+        FileManager.storeCourses(allCats, personalCats)
 
-    def cataloguesFromLists(self, lists):
+    def getCataloguesFromLists(self, lists):
         cats = []
         curCatalogue = None
 
@@ -334,9 +415,8 @@ class MainWindow(QMainWindow):
                 curCatalogue.courses.append(widget.course)
         return cats
 
-    @QtCore.pyqtSlot()
     def prepareFetching(self):
-        self.label.setText("")
+        self.statusOutput.setText("")
         for l in self.tissCatalogues:
             l.clear()
         self.setUIEnabled(False)
@@ -355,28 +435,26 @@ class MainWindow(QMainWindow):
             val = 1
         self.progressBar.setValue(val)
 
-    @QtCore.pyqtSlot(str)
     def updateStatus(self, str):
-        self.label.setText(str)
+        self.statusOutput.setText(str)
         self.progressBar.setValue(self.progressBar.value() + self.fetchIncrement)
 
-    @QtCore.pyqtSlot(object)
     def fetchingFinished(self, catalogues):
         self.progressBar.setValue(0)
-        self.label.setText("Importing courses...")
+        self.statusOutput.setText("Importing courses...")
 
         for index, c in enumerate(catalogues):
             currentListWidget = self.tissCatalogues[index]
             for i, co in enumerate(c.courses):
                 self.addNewCourse(currentListWidget, co, False)
-                self.label.setText("Importing \"WFK %s\"...(%i/%i)"%(Catalogue.catalogueLetters[index], i, len(c.courses)))
+                self.statusOutput.setText("Importing \"WFK %s\"...(%i/%i)"%(Catalogue.catalogueLetters[index], i, len(c.courses)))
                 self.progressBar.setValue(int(float(i/len(c.courses))*100))
                 QtWidgets.qApp.processEvents()
                 
-        self.label.setText("Finished (%.2fs)" % (time.time()-self.startTime));
+        self.statusOutput.setText("Finished (%.2fs)" % (time.time()-self.startTime));
+        self.lastFetchDateTime.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         self.setUIEnabled(True)
         self.updateTitles()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

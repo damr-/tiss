@@ -148,7 +148,6 @@ class WorkerObject(QtCore.QObject):
             i+=1
         return catalogues
 
-    @QtCore.pyqtSlot()
     def startWork(self, semester, timeout):
         driver = self.startGecko()
 
