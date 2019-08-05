@@ -265,6 +265,11 @@ class MainWindow(QMainWindow):
             self.tabWidget.setTabText(index, Catalogue.catalogueLetters[index] + " (" + str(count) + "/" + str(len(self.tissCatalogues[index])) + ")")
         if text == "":
             self.updateTitles()
+            self.checkCurriculumButton.setEnabled(True)
+            self.clearCurriculumFeedbackButton.setEnabled(True)
+        else:
+            self.checkCurriculumButton.setEnabled(False)
+            self.clearCurriculumFeedbackButton.setEnabled(False)
 
     def setCourseInfoHidden(self, infoIdx, hidden):
         for index in range(len(Catalogue.catalogueLetters)):
