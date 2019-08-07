@@ -1,14 +1,17 @@
 A
 136.028|VU|2019W|Black Holes I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136028&semester=2019W
+132.073|VO|2019W|Coherent Control of Quantum Systems|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=132073&semester=2019W
 136.026|VO|2019W|Einf.i.d.Allgemeine Relativitätstheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136026&semester=2019W
 136.008|VO|2019W|Geometrie und Gravitation II|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136008&semester=2019W
 134.359|VO|2020S|Grundlagen der Plasmatheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134359&semester=2020S
 142.725|VO|2019W|Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142725&semester=2019W
 141.123|VO|2019W|Quanten-Interferometrie im Phasenraum I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141123&semester=2019W
 142.197|VO|2019W|Quantenchromodynamik I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142197&semester=2019W
+142.923|VO|2020S|Quantenchromodynamik II|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142923&semester=2020S
 134.645|VO|2019W|Rechenverfahren in der Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134645&semester=2019W
 136.058|SE|2019W|Seminar für Theoretische Physik II|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136058&semester=2019W
 142.069|SE|2019W|Seminar über Atomare und Subatomare Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142069&semester=2019W
+142.064|VO|2020S|Solitonen, Differentialgeometrie und Topologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142064&semester=2020S
 142.340|SV|2019W|Statistische Methoden der Datenanalyse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142340&semester=2019W
 142.351|UE|2019W|Statistische Methoden der Datenanalyse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142351&semester=2019W
 134.179|UE|2020S|Symbolische Mathematik in der Physik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134179&semester=2020S
@@ -20,7 +23,6 @@ B
 134.154|VO|2019W|Der Laser in Physik, Chemie, Biologie und Medizin|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134154&semester=2019W
 134.194|VO|2020S|Einführung in die Plasmaphysik und -technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134194&semester=2020S
 134.359|VO|2020S|Grundlagen der Plasmatheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134359&semester=2020S
-134.172|VO|2019W|Ionen-Festkörper-Wechselwirkungen abgesagt|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134172&semester=2019W
 142.318|VO|2019W|Neutronen- und Kernphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142318&semester=2019W
 141.242|VO|2020S|Neutronen- und Röntgendiffraktometrie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141242&semester=2020S
 141.158|VO|2020S|Neutronenoptik und Tomographie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141158&semester=2020S
@@ -38,6 +40,7 @@ B
 134.081|SE|2020S|Seminar aus Allgemeiner Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134081&semester=2020S
 134.081|SE|2019W|Seminar aus Allgemeiner Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134081&semester=2019W
 142.069|SE|2019W|Seminar über Atomare und Subatomare Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142069&semester=2019W
+142.064|VO|2020S|Solitonen, Differentialgeometrie und Topologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142064&semester=2020S
 141.405|VO|2020S|Strahlenphysik|3.0|4.5|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141405&semester=2020S
 141.905|SE|2020S|Strahlenphys.Anw.in Technik u.Medizin|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141905&semester=2020S
 141.905|SE|2019W|Strahlenphys.Anw.in Technik u.Medizin|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141905&semester=2019W
@@ -49,6 +52,7 @@ B
 141.A78|LU|2020S|Praktikum aus Neutronenphysik|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A78&semester=2020S
 141.A78|LU|2019W|Praktikum aus Neutronenphysik|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A78&semester=2019W
 136.058|SE|2019W|Seminar für Theoretische Physik II|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136058&semester=2019W
+142.093|UE|2020S|Atom-, Kern- und Teilchenphysik II|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142093&semester=2020S
 C
 134.089|VO|2020S|Electronic Structure of Solids and Surfaces|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134089&semester=2020S
 134.326|VO|2020S|Experimentelle Methoden der Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134326&semester=2020S
@@ -95,7 +99,6 @@ D
 133.031|VO|2019W|Hochauflösende Elektronenmikroskopie von Festkörpern|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133031&semester=2019W
 141.457|VO|2020S|Hochtemperatursupraleiter|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141457&semester=2020S
 134.152|VO|2019W|Introduction to Nanotechnology|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134152&semester=2019W
-134.172|VO|2019W|Ionen-Festkörper-Wechselwirkungen abgesagt|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134172&semester=2019W
 141.724|VO|2020S|Isotopentechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141724&semester=2020S
 138.048|VO|2020S|Kernmagnetische Messmethoden|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138048&semester=2020S
 141.225|VO|2020S|Medizinische Physik in der Radiologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141225&semester=2020S

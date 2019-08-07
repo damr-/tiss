@@ -19,7 +19,9 @@ ignoredRows = ["Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessur
 def isCatalogue(element):
     return 'WFK' in element.text
 def isCourse(element):
-    return 'course' in element['class'][-2].lower() #can also be 'canceledCourse'  #any('course' in c for c in element['class']]):
+    return 'course' == element['class'][-2] #any('course' in c for c in element['class']]):
+def isCanceledCourse(element):
+    return 'canceledCourse' == element['class'][-2]
 
 class WorkerObject(QtCore.QObject):
     updateSignal = QtCore.pyqtSignal(str)
@@ -27,6 +29,7 @@ class WorkerObject(QtCore.QObject):
 
     def __init__(self, parent=None):
         super(self.__class__, self).__init__(parent)
+        self.driver = None
 
     def startGecko(self):
         self.updateSignal.emit("Starting headless browser...")
@@ -75,21 +78,21 @@ class WorkerObject(QtCore.QObject):
                 courses.remove(entry)
         return filteredEntries
         
-    def getVertiefung1Courses(self, url, driver, semester, TIMEOUT):
+    def getVertiefung1Courses(self, url, semester, TIMEOUT):
         self.updateSignal.emit("Connecting to TISS...")
-        driver.get(url)
+        self.driver.get(url)
 
-        WebDriverWait(driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b')))
-        #TODO FIX TIMEOUT EXCEPTION
+        WebDriverWait(self.driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b')))
+        #TODO HANDLE TIMEOUT EXCEPTION
 
         self.updateSignal.emit("Selecting semester %s..." % semester)
-        semesterSelect = Select(driver.find_element_by_id('j_id_2b:semesterSelect'))
+        semesterSelect = Select(self.driver.find_element_by_id('j_id_2b:semesterSelect'))
         semesterSelect.select_by_visible_text(semester)
-        WebDriverWait(driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))
-        #TODO FIX TIMEOUT EXCEPTION
+        WebDriverWait(self.driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))
+        #TODO HANDLE TIMEOUT EXCEPTION
 
         self.updateSignal.emit("Fetching entries...")
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
 
         allEntries = soup.select("div.ui-outputpanel")
         
@@ -140,20 +143,24 @@ class WorkerObject(QtCore.QObject):
                 link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
                 aunts = entry.parent.parent.findChildren("td", recursive=False)
                 hours = float(aunts[2].text.strip())
-                credits = float(aunts[3].text.strip()) 
+                credits = float(aunts[3].text.strip())
                 newCourse = Course(number, courseType, semester, name, hours, credits, link)
-                curCatalogue.courses.append(newCourse)         
+                curCatalogue.courses.append(newCourse)
+            elif isCanceledCourse(entry):
+                pass
             else:
                 print("ERROR: Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
             i+=1
         return catalogues
 
     def startWork(self, semester, timeout):
-        driver = self.startGecko()
-
-        courses = self.getVertiefung1Courses(coursesURL, driver, semester, timeout)
+        self.driver = self.startGecko()
+        courses = self.getVertiefung1Courses(coursesURL, semester, timeout)
         vertiefungen = self.sortEntries(courses)
-
-        driver.quit()
+        self.driver.quit()
         self.updateSignal.emit("Fetching finished")
         self.doneSignal.emit(vertiefungen)
+
+    #TODO Test this
+    def abort(self):
+        self.driver.quit()
