@@ -100,17 +100,25 @@ class CourseWidget(QWidget):
     def setGreyedOut(self, greyedOut):
         if self.isGreyedOut == greyedOut:
             return
+        self.isGreyedOut = greyedOut
+
+        if greyedOut:
+            self.setHighlit(False)
             
         self.removeFeedback()
         ss = ""
         if greyedOut:
             ss = CourseWidget.greyStyleSheet
         self.setStyleSheet(ss)
-        self.isGreyedOut = greyedOut
+        self.repaint()
 
     def setHighlit(self, highlit):
         if self.isHighlit == highlit:
             return
+        self.isHighlit = highlit
+
+        if highlit:
+            self.setGreyedOut(False)
 
         self.setStyleSheet("")
         ss = ""
@@ -118,7 +126,6 @@ class CourseWidget(QWidget):
             ss = "QLabel { background-color: yellow; }"
         self.feedbackLabel.setStyleSheet(ss)
         self.feedbackLabel.repaint()
-        self.isHighlit = highlit
 
     def setInfoHidden(self, infoIdx, hide):
         self.hideableInfos[infoIdx].setVisible(not hide)

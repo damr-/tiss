@@ -30,6 +30,7 @@ B
 142.072|VO|2019W|Physics of Exotic Atoms|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142072&semester=2019W
 134.750|VO|2020S|Phys. Grundlagen d. Kernfusionsreaktors|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134750&semester=2020S
 134.169|VO|2019W|Plasmatechnologie und -chemie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134169&semester=2019W
+141.A87|LU|2019W|Praktische Übungen am Reaktor|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A87&semester=2019W
 141.A84|LU|2019W|Praktische Übungen aus Strahlenphysik|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A84&semester=2019W
 141.123|VO|2019W|Quanten-Interferometrie im Phasenraum I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141123&semester=2019W
 142.197|VO|2019W|Quantenchromodynamik I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142197&semester=2019W
@@ -118,6 +119,7 @@ D
 141.537|VO|2019W|Reaktorphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141537&semester=2019W
 134.996|VO|2019W|Mikroskopie an Biomolekülen|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134996&semester=2019W
 134.202|VO|2020S|Biomembranes|1.0|1.5|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134202&semester=2020S
+141.A87|LU|2019W|Praktische Übungen am Reaktor|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A87&semester=2019W
 141.A84|LU|2019W|Praktische Übungen aus Strahlenphysik|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A84&semester=2019W
 141.658|VO|2020S|Nuclear Engineering II|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141658&semester=2020S
 141.075|UE|2019W|Rechenmethoden des Strahlenschutzes I|1.0|1.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141075&semester=2019W
