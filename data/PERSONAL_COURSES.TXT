@@ -1,7 +1,6 @@
 A
-142.197|VO|2019W|Quantenchromodynamik I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142197&semester=2019W
-142.725|VO|2019W|Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142725&semester=2019W
 B
 C
+141.158|VO|2020S|Neutronenoptik und Tomographie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141158&semester=2020S
 D
-141.106|LU|2019W|Archäometrie: Datierung, Spurenelement-Bestimmung|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141106&semester=2019W
+141.A76|LU|2019W|Graphical Programming and Experiment Control|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A76&semester=2019W
