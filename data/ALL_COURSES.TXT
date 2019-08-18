@@ -23,6 +23,7 @@ B
 134.154|VO|2019W|Der Laser in Physik, Chemie, Biologie und Medizin|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134154&semester=2019W
 134.194|VO|2020S|Einführung in die Plasmaphysik und -technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134194&semester=2020S
 134.359|VO|2020S|Grundlagen der Plasmatheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134359&semester=2020S
+141.231|VO|2020S|Macroscopic Quantum Systems|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141231&semester=2020S
 142.318|VO|2019W|Neutronen- und Kernphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142318&semester=2019W
 141.242|VO|2020S|Neutronen- und Röntgendiffraktometrie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141242&semester=2020S
 141.158|VO|2020S|Neutronenoptik und Tomographie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141158&semester=2020S
@@ -89,6 +90,7 @@ D
 153.054|LU|2020S|Chemische Übungen für TPH|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=153054&semester=2020S
 134.154|VO|2019W|Der Laser in Physik, Chemie, Biologie und Medizin|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134154&semester=2019W
 134.177|VO|2020S|Einführung in die Akustik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134177&semester=2020S
+101.028|VO|2019W|Einführung in die Biomedizinische Technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=101028&semester=2019W
 134.194|VO|2020S|Einführung in die Plasmaphysik und -technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134194&semester=2020S
 134.089|VO|2020S|Electronic Structure of Solids and Surfaces|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134089&semester=2020S
 134.049|VO|2020S|Elektronische Analog- und Digitaltechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134049&semester=2020S
