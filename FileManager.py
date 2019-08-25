@@ -62,7 +62,7 @@ class FileManager():
         text = ""
         for s in settings:
             text += str(s) + "|"
-        f.write(text)
+        f.write(text[:-1])
 
     def loadSettings():
         f = FileManager.openFile(FileManager.SETTINGS_FILENAME, False)

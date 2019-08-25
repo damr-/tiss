@@ -8,12 +8,16 @@ A
 141.123|VO|2019W|Quanten-Interferometrie im Phasenraum I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141123&semester=2019W
 142.197|VO|2019W|Quantenchromodynamik I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142197&semester=2019W
 142.923|VO|2020S|Quantenchromodynamik II|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142923&semester=2020S
+138.062|VO|2020S|Quantenfeldtheorie für Vielteilchensysteme|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138062&semester=2020S
+138.088|UE|2020S|Quantenfeldtheorie für Vielteilchensysteme|1.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138088&semester=2020S
 134.645|VO|2019W|Rechenverfahren in der Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134645&semester=2019W
 136.058|SE|2019W|Seminar für Theoretische Physik II|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136058&semester=2019W
 142.069|SE|2019W|Seminar über Atomare und Subatomare Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142069&semester=2019W
 142.064|VO|2020S|Solitonen, Differentialgeometrie und Topologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142064&semester=2020S
 142.340|SV|2019W|Statistische Methoden der Datenanalyse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142340&semester=2019W
 142.351|UE|2019W|Statistische Methoden der Datenanalyse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142351&semester=2019W
+138.099|VO|2019W|Steuerung und Auswertung von Experimenten|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138099&semester=2019W
+138.100|UE|2019W|Steuerung und Auswertung von Experimenten|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138100&semester=2019W
 134.179|UE|2020S|Symbolische Mathematik in der Physik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134179&semester=2020S
 B
 141.106|LU|2019W|Archäometrie: Datierung, Spurenelement-Bestimmung|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141106&semester=2019W
@@ -58,10 +62,14 @@ B
 C
 134.089|VO|2020S|Electronic Structure of Solids and Surfaces|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134089&semester=2020S
 134.326|VO|2020S|Experimentelle Methoden der Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134326&semester=2020S
+138.057|VO|2019W|Festkörperspektroskopie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138057&semester=2019W
+133.293|VO|2020S|Grundlagen der Elektronenmikroskopie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133293&semester=2020S
 133.031|VO|2019W|Hochauflösende Elektronenmikroskopie von Festkörpern|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133031&semester=2019W
 141.457|VO|2020S|Hochtemperatursupraleiter|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141457&semester=2020S
 138.048|VO|2020S|Kernmagnetische Messmethoden|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138048&semester=2020S
 141.058|SE|2019W|Low Temperature Physics Seminar|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141058&semester=2019W
+133.000|VO|2020S|Magnetische Relaxationsprozesse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133000&semester=2020S
+138.033|VO|2020S|Magnetismus|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138033&semester=2020S
 141.543|SE|2020S|Neutronen-und Festkörperphysik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141543&semester=2020S
 141.543|SE|2019W|Neutronen-und Festkörperphysik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141543&semester=2019W
 141.242|VO|2020S|Neutronen- und Röntgendiffraktometrie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141242&semester=2020S
@@ -69,18 +77,28 @@ C
 134.069|SE|2020S|New Developments in Surface Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134069&semester=2020S
 134.069|SE|2019W|New Developments in Surface Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134069&semester=2019W
 134.165|VO|2019W|Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134165&semester=2019W
+133.019|VO|2019W|Physics of Magnetic Materials|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133019&semester=2019W
+138.056|VO|2020S|Functional Materials|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138056&semester=2020S
+138.032|VO|2020S|Physik dünner Schichten|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138032&semester=2020S
 138.035|UE|2020S|Physik dünner Schichten|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138035&semester=2020S
+138.035|UE|2019W|Physik dünner Schichten|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138035&semester=2019W
+138.062|VO|2020S|Quantenfeldtheorie für Vielteilchensysteme|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138062&semester=2020S
+138.001|SE|2020S|Seminar aus Festkörperphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138001&semester=2020S
 138.001|SE|2019W|Seminar aus Festkörperphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138001&semester=2019W
 134.099|SE|2020S|Seminar Computational Materials Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134099&semester=2020S
 134.099|SE|2019W|Seminar Computational Materials Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134099&semester=2019W
 141.222|VO|2020S|SQUIDs - Grundlagen und Anwendungen|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141222&semester=2020S
+131.047|VO|2020S|Strongly Correlated Electron Systems|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=131047&semester=2020S
 141.388|SE|2020S|Superconductivity Seminar|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141388&semester=2020S
 141.685|VO|2019W|Supraleitung|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141685&semester=2019W
 134.086|VO|2019W|Theory of Electronic Spectra of Solids and Surfaces|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134086&semester=2019W
+138.034|VO|2019W|Tieftemperaturphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138034&semester=2019W
 133.026|VO|2020S|Versetzungen in Kristallen|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133026&semester=2020S
 138.091|VO|2019W|Methoden und Materialien der modernen optischen Spektroskopie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138091&semester=2019W
 141.A83|LU|2020S|Praktikum aus Tieftemperaturphysik|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A83&semester=2020S
+138.103|VO|2019W|Techniken der analytischen Elektronenmikroskopie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138103&semester=2019W
 D
+141.223|VO|2020S|Alternative nukleare Energiesysteme|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141223&semester=2020S
 141.106|LU|2019W|Archäometrie: Datierung, Spurenelement-Bestimmung|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141106&semester=2019W
 141.399|VO|2019W|Archäometrie: Physikalische Methoden der Altersbestimmung|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141399&semester=2019W
 134.514|VO|2019W|Atomare Stoßprozesse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134514&semester=2019W
@@ -92,10 +110,13 @@ D
 134.177|VO|2020S|Einführung in die Akustik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134177&semester=2020S
 101.028|VO|2019W|Einführung in die Biomedizinische Technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=101028&semester=2019W
 134.194|VO|2020S|Einführung in die Plasmaphysik und -technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134194&semester=2020S
+138.043|VO|2020S|Einführung in die Tieftemperaturphysik und -technologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138043&semester=2020S
 134.089|VO|2020S|Electronic Structure of Solids and Surfaces|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134089&semester=2020S
+131.008|VO|2020S|Elektronische Analog- und Digitaltechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=131008&semester=2020S
 134.049|VO|2020S|Elektronische Analog- und Digitaltechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134049&semester=2020S
 134.161|VO|2019W|Elektronische Messtechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134161&semester=2019W
 134.326|VO|2020S|Experimentelle Methoden der Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134326&semester=2020S
+138.057|VO|2019W|Festkörperspektroskopie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138057&semester=2019W
 141.A76|LU|2020S|Graphical Programming and Experiment Control|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A76&semester=2020S
 141.A76|LU|2019W|Graphical Programming and Experiment Control|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A76&semester=2019W
 134.772|VO|2019W|Grundlagen und Anwendung der Mikrocomputer-Technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134772&semester=2019W
@@ -104,14 +125,18 @@ D
 134.152|VO|2019W|Introduction to Nanotechnology|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134152&semester=2019W
 141.724|VO|2020S|Isotopentechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141724&semester=2020S
 138.048|VO|2020S|Kernmagnetische Messmethoden|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138048&semester=2020S
+138.033|VO|2020S|Magnetismus|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138033&semester=2020S
 141.225|VO|2020S|Medizinische Physik in der Radiologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141225&semester=2020S
 134.069|SE|2020S|New Developments in Surface Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134069&semester=2020S
 134.069|SE|2019W|New Developments in Surface Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134069&semester=2019W
 141.032|VO|2019W|Reaktortechnik I - nuclear engineering I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141032&semester=2019W
 134.165|VO|2019W|Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134165&semester=2019W
+133.019|VO|2019W|Physics of Magnetic Materials|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133019&semester=2019W
 142.769|VO|2019W|Physik der Atmosphäre|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142769&semester=2019W
 133.043|VO|2020S|Physik der Silizium-Halbleiter-Materialien|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133043&semester=2020S
+138.032|VO|2020S|Physik dünner Schichten|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138032&semester=2020S
 138.035|UE|2020S|Physik dünner Schichten|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138035&semester=2020S
+138.035|UE|2019W|Physik dünner Schichten|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138035&semester=2019W
 134.750|VO|2020S|Phys. Grundlagen d. Kernfusionsreaktors|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134750&semester=2020S
 134.169|VO|2019W|Plasmatechnologie und -chemie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134169&semester=2019W
 141.A79|LU|2020S|Praktische Übungen aus Reaktorinstrumentierung|3.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A79&semester=2020S
@@ -129,6 +154,7 @@ D
 134.108|VO|2020S|Schallausbreitung und Lärmschutz|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134108&semester=2020S
 134.081|SE|2020S|Seminar aus Allgemeiner Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134081&semester=2020S
 134.081|SE|2019W|Seminar aus Allgemeiner Physik|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134081&semester=2019W
+138.001|SE|2020S|Seminar aus Festkörperphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138001&semester=2020S
 138.001|SE|2019W|Seminar aus Festkörperphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138001&semester=2019W
 141.114|SE|2020S|Seminar aus Reaktorsicherheit|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141114&semester=2020S
 134.099|SE|2020S|Seminar Computational Materials Science|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134099&semester=2020S
@@ -143,9 +169,12 @@ D
 141.388|SE|2020S|Superconductivity Seminar|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141388&semester=2020S
 141.685|VO|2019W|Supraleitung|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141685&semester=2019W
 134.995|VO|2019W|Technische Akustik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134995&semester=2019W
+131.058|VO|2019W|Technische Optik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=131058&semester=2019W
 141.010|VO|2019W|Techn.Strahlenschutz I|3.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141010&semester=2019W
+138.030|VO|2019W|Technologie dünner Schichten|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138030&semester=2019W
 141.944|VO|2019W|Teilchenbeschleuniger|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141944&semester=2019W
 134.086|VO|2019W|Theory of Electronic Spectra of Solids and Surfaces|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134086&semester=2019W
+138.034|VO|2019W|Tieftemperaturphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138034&semester=2019W
 133.026|VO|2020S|Versetzungen in Kristallen|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=133026&semester=2020S
 141.211|VO|2020S|X-Ray Analytical Methods|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141211&semester=2020S
 134.204|VO|2019W|Functional Imaging Technology and Devices - Physical Principles|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134204&semester=2019W

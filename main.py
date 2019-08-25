@@ -37,7 +37,6 @@ class MainWindow(QMainWindow):
             self.lastFetchDateTime.setText(settings[0])
             self.toggleCourseNumbers.setChecked(FileManager.str2bool(settings[1]))
             self.toggleCourseHours.setChecked(FileManager.str2bool(settings[2]))
-            self.toggleQuestion.setChecked(FileManager.str2bool(settings[3]))
 
     def initUI(self):
         centralWidget = QWidget(self)
@@ -190,8 +189,6 @@ class MainWindow(QMainWindow):
         self.toggleCourseHours.setTristate(False)
         self.toggleCourseHours.toggled.connect(lambda hidden: self.setCourseInfoHidden(CourseWidget.HIDE_HOURS, hidden))
         toggleLayout.addWidget(self.toggleCourseHours)
-        self.toggleQuestion = QCheckBox("Quit without asking", self)
-        toggleLayout.addWidget(self.toggleQuestion)
         toggleGroup = QGroupBox()
         toggleGroup.setLayout(toggleLayout)
         gridLayout.addWidget(toggleGroup, 3, 0)
@@ -229,24 +226,9 @@ class MainWindow(QMainWindow):
                 worker_thread.wait()"""
 
     def closeEvent(self, event):
-        FileManager.storeSettings([self.lastFetchDateTime.text(), self.toggleCourseNumbers.isChecked(), self.toggleCourseHours.isChecked(), self.toggleQuestion.isChecked()])
-
-        if self.toggleQuestion.isChecked():
-            self.storeCourses()
-            event.accept()
-            return
-
-        resBtn = QMessageBox.question( self, "Save?",
-                                        "Do you want to save the courses?\n",
-                                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-                                        QMessageBox.Yes)
-        if resBtn == QMessageBox.Yes:
-            self.storeCourses()
-            event.accept()
-        elif resBtn == QMessageBox.No:
-            event.accept()
-        else:
-            event.ignore()
+        FileManager.storeSettings([self.lastFetchDateTime.text(), self.toggleCourseNumbers.isChecked(), self.toggleCourseHours.isChecked()])
+        self.storeCourses()
+        event.accept()
 
     def searchCourses(self, text):
         text = text.strip()
