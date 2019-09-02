@@ -83,3 +83,4 @@ Theory of magnetism|VO|3.0
 Thermische Quantenfeldtheorie|VO|3.0
 Thermodynamik|VO|3.0
 Thermodynamik|UE|1.5
+Wissenschaftliches Programmieren|VU|3.0

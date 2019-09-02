@@ -4,9 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from collections import deque
 from bs4 import BeautifulSoup
 from PyQt5 import QtCore
 from CourseWidget import Course
@@ -35,19 +33,19 @@ class WorkerObject(QtCore.QObject):
         self.updateSignal.emit("Starting headless browser...")
         options = Options()
         options.headless = True
-        return webdriver.Firefox(options=options) # use headless firefox to get page with generated content
+        return webdriver.Firefox(options=options)  # use headless firefox to get page with generated content
 
     def getEntries(self, url, driver, semester, TIMEOUT, isTransferables):
         if not isTransferables:
             self.updateSignal.emit("Connecting to TISS...")
         driver.get(url)
-        WebDriverWait(driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b'))) #Wait until main body with courses has been loaded
+        WebDriverWait(driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b')))  #Wait until main body with courses has been loaded
 
         if not isTransferables:
             self.updateSignal.emit("Selecting semester %s..." % semester)
         semesterSelect = Select(driver.find_element_by_id('j_id_2b:semesterSelect'))
         semesterSelect.select_by_visible_text(semester) #Select the correct semester
-        WebDriverWait(driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g'))) #Wait until spinning gif vanished
+        WebDriverWait(driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))  #Wait until spinning gif vanished
 
         if not isTransferables:
             self.updateSignal.emit("Fetching entries...")

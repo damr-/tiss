@@ -24,6 +24,7 @@ Materials Synthesis|VO|3.0
 Methoden und Materialien der modernen optischen Spektroskopie|VO|3.0
 Neutronen- und Festkörperphysik|SE|2.0
 Neutronen- und Röntgendiffraktometrie|VO|3.0
+Neutronenoptik und Tomographie|VO|3.0
 New Developments in Surface Science|SE|3.0
 Oberflächenphysik|VO|3.0
 Phasenübergänge und kritische Phänomene|VO|3.0

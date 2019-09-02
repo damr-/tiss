@@ -32,6 +32,7 @@ Methods of Quantitative X-ray Fluorescence Analysis|VO|3.0
 Neutronen und Kernphysik|VO|3.0
 Neutronen- und Festkörperphysik|VO|3.0
 Neutronen- und Röntgendiffraktometrie|VO|3.0
+Neutronenoptik und Tomographie|VO|3.0
 Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie|VO|3.0
 Phänomenologische Teilchenphysik|VU|3.0
 Physics of Exotic Atoms|VO|3.0

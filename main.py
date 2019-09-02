@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         self.personalCatalogueRowsFirst = 4
         self.personalCatalogueRowsSecond = 8
         self.personalCatalogueCols = 1
-    
+
         self.tissCatalogues = []
         self.personalCatalogues = []
         self.personalCataloguesTitles = []
@@ -48,6 +48,12 @@ class MainWindow(QMainWindow):
         fetchLayout = QVBoxLayout()
         fetchLayout.setContentsMargins(0, 0, 0, 0)
         fetchLayout.setSpacing(0)
+
+        link = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=43093&semester=NEXT"
+        self.currLink = QLabel("", self)
+        self.currLink.linkActivated.connect(lambda linkStr: QtGui.QDesktopServices.openUrl(QtCore.QUrl(linkStr)))
+        self.currLink.setText('<a href="' + link + '">Curriculum</a>')
+        fetchLayout.addWidget(self.currLink)
 
         hlayout = QHBoxLayout()
         hlayout.setContentsMargins(0, 0, 0, 0)
@@ -84,7 +90,7 @@ class MainWindow(QMainWindow):
         lastFetchLayout.addWidget(self.lastFetchDateTime)
         lastFetchLayout.addStretch(0)
         fetchLayout.addLayout(lastFetchLayout)
-        
+
         fetchGroup = QGroupBox()
         fetchGroup.setLayout(fetchLayout)
         gridLayout.addWidget(fetchGroup, 0, 0)
@@ -102,7 +108,7 @@ class MainWindow(QMainWindow):
         self.tissCatalogues.append(self.tissCatalogueB)
         self.tissCatalogues.append(self.tissCatalogueC)
         self.tissCatalogues.append(self.tissCatalogueD)
-        
+
         for index, l in enumerate(self.tissCatalogues):
             l.setSizePolicy(sizePolicy)
             l.setMinimumSize(QtCore.QSize(50, 50))
@@ -212,13 +218,7 @@ class MainWindow(QMainWindow):
         # Connect any worker signals
         worker.doneSignal.connect(self.fetchingFinished)
         worker.updateSignal.connect(self.updateStatus)
-
         self.fetchButton.clicked.connect(functools.partial(worker.startWork, self.semesterSelectBox.currentText(), self.timeout))
-
-        #def connectSignals(self):
-            #self.gui.button_cancel.clicked.connect(self.forceWorkerReset)
-            #self.signalStatus.connect(self.updateStatus)
-            #self.aboutToQuit.connect(self.forceWorkerQuit)
 
         """def forceWorkerQuit(self):
             if worker_thread.isRunning():
