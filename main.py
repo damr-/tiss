@@ -9,6 +9,7 @@ from CourseWidget import Course
 from CourseWidget import CourseWidget
 from FileManager import FileManager
 
+
 class MainWindow(QMainWindow):
 
     def __init__(self):
@@ -158,8 +159,6 @@ class MainWindow(QMainWindow):
             gridLayout.addLayout(vlayout, row, col, rowSpan, self.personalCatalogueCols)
 
         searchLayout = QHBoxLayout()
-        #icon = QLabel("O", self)
-        #searchLayout.addWidget(icon)
         searchText = QLineEdit("", self)
         searchText.setPlaceholderText("Search...")
         shortcut = QShortcut(QtGui.QKeySequence("Ctrl+F"), self)
@@ -205,7 +204,7 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         self.setWindowTitle("Tiss Program")
-        
+
         self.updateTitles()
 
     def setupWorkerThread(self):
@@ -268,7 +267,7 @@ class MainWindow(QMainWindow):
             ca = Course("000.000", "VO", "2019W", "TestName"+str(idx), 3.0, 3.0, "test.com")
             c.courses.append(ca)
             self.addNewCourse(self.tissCatalogues[idx], ca, False)
-        
+
     def addNewCourse(self, targetList, course, isPersonal):
         itemWidget = CourseWidget(course, isPersonal)
         item = QListWidgetItem()
@@ -290,7 +289,7 @@ class MainWindow(QMainWindow):
         originList = self.tissCatalogues[tabIdx]
         if len(originList.selectedItems()) == 0:
             return
-        
+
         item = originList.selectedItems()[0]
         targetList = self.personalCatalogues[tabIdx]
         self.tryAddPersonalCourse(targetList, originList, item)
@@ -394,7 +393,7 @@ class MainWindow(QMainWindow):
         cats = []
         curCatalogue = None
 
-        for index,c in enumerate(lists):
+        for index, c in enumerate(lists):
             curCatalogue = Catalogue(Catalogue.catalogueLetters[index])
             cats.append(curCatalogue)
             for i in range(lists[index].count()):
@@ -442,6 +441,7 @@ class MainWindow(QMainWindow):
         self.lastFetchDateTime.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         self.setUIEnabled(True)
         self.updateTitles()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
