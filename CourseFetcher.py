@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from bs4 import BeautifulSoup
 from PyQt5 import QtCore
 from CourseWidget import Course
@@ -16,8 +16,10 @@ ignoredRows = ["Lehrveranstaltungen des ATHENS-Programmes oder von Gastprofessur
 
 def isCatalogue(element):
     return 'WFK' in element.text
+
 def isCourse(element):
     return 'course' == element['class'][-2] #any('course' in c for c in element['class']]):
+
 def isCanceledCourse(element):
     return 'canceledCourse' == element['class'][-2]
 
@@ -33,72 +35,42 @@ class WorkerObject(QtCore.QObject):
         self.updateSignal.emit("Starting headless browser...")
         options = Options()
         options.headless = True
-        return webdriver.Firefox(options=options)  # use headless firefox to get page with generated content
+        return webdriver.Firefox(options=options)
 
-    def getEntries(self, url, driver, semester, TIMEOUT, isTransferables):
-        if not isTransferables:
-            self.updateSignal.emit("Connecting to TISS...")
-        driver.get(url)
-        WebDriverWait(driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b')))  #Wait until main body with courses has been loaded
-
-        if not isTransferables:
-            self.updateSignal.emit("Selecting semester %s..." % semester)
-        semesterSelect = Select(driver.find_element_by_id('j_id_2b:semesterSelect'))
-        semesterSelect.select_by_visible_text(semester) #Select the correct semester
-        WebDriverWait(driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))  #Wait until spinning gif vanished
-
-        if not isTransferables:
-            self.updateSignal.emit("Fetching entries...")
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-
-        allEntries = soup.select("div.ui-outputpanel")
-
-        headerChilds = soup.select("div.ui-outputpanel span.bold")
-        headers = []
-        for c in headerChilds:
-            if c.parent.name == 'a':
-                headers.append(c.parent.parent)
-            else:
-                headers.append(c.parent)
-
-        coursesChilds = soup.select("div.ui-outputpanel > div.courseKey") #only take courses with an actual existing TISS page
-        courses = []
-        for c in coursesChilds:
-            courses.append(c.parent)
-
-        filteredEntries = []
-        for entry in allEntries:
-            if entry in headers:
-                filteredEntries.append(entry)
-                headers.remove(entry)
-            elif entry in courses:
-                filteredEntries.append(entry)
-                courses.remove(entry)
-        return filteredEntries
-        
     def getVertiefung1Courses(self, url, semester, TIMEOUT):
         self.updateSignal.emit("Connecting to TISS...")
-        self.driver.get(url)
 
-        WebDriverWait(self.driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID,'j_id_2b')))
-        #TODO HANDLE TIMEOUT EXCEPTION
+        try:
+            self.driver.get(url)
+        except WebDriverException:
+            return [], "Connection error"
+
+        try:
+            WebDriverWait(self.driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID, 'j_id_2b')))
+        except TimeoutException:
+            return [], "Timed out"
 
         self.updateSignal.emit("Selecting semester %s..." % semester)
         semesterSelect = Select(self.driver.find_element_by_id('j_id_2b:semesterSelect'))
         semesterSelect.select_by_visible_text(semester)
-        WebDriverWait(self.driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))
-        #TODO HANDLE TIMEOUT EXCEPTION
+
+        try:
+            WebDriverWait(self.driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))
+        except TimeoutException:
+            return [], "Timed out"
 
         self.updateSignal.emit("Fetching entries...")
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
 
         allEntries = soup.select("div.ui-outputpanel")
-        
+
         headerChilds = soup.select("div.ui-outputpanel > span.bold")
         headers = []
         for c in headerChilds:
             headers.append(c.parent)
-        coursesChilds = soup.select("div.ui-outputpanel > div.courseKey") #only take courses with an actual existing TISS page
+
+        # Only take courses with an actual existing TISS page
+        coursesChilds = soup.select("div.ui-outputpanel > div.courseKey")
         courses = []
         for c in coursesChilds:
             courses.append(c.parent)
@@ -116,16 +88,16 @@ class WorkerObject(QtCore.QObject):
                 break
             if found and (entry in headers or entry in courses):
                 filteredEntries.append(entry)
-        return filteredEntries
+        return filteredEntries, ""
 
     def sortEntries(self, entries):
         catalogues = []
-        i=0
+        i = 0
         curCatalogue = None
 
         for entry in entries:
-            self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i+1), len(entries)))
-            
+            self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i + 1), len(entries)))
+
             if any(entry.text.strip() == ignored for ignored in ignoredRows):
                 pass
             elif isCatalogue(entry):
@@ -147,18 +119,17 @@ class WorkerObject(QtCore.QObject):
             elif isCanceledCourse(entry):
                 pass
             else:
-                print("ERROR: Could not categorize " + ' '.join(entry.text.replace('\n',' ').split()))
-            i+=1
+                print("ERROR: Could not categorize " + ' '.join(entry.text.replace('\n', ' ').split()))
+            i += 1
         return catalogues
 
     def startWork(self, semester, timeout):
         self.driver = self.startGecko()
-        courses = self.getVertiefung1Courses(coursesURL, semester, timeout)
+        courses, msg = self.getVertiefung1Courses(coursesURL, semester, timeout)
+        self.driver.quit()
         vertiefungen = self.sortEntries(courses)
-        self.driver.quit()
-        self.updateSignal.emit("Fetching finished")
+        if len(courses) > 0:
+            self.updateSignal.emit("Fetching finished")
+        else:
+            self.updateSignal.emit("Fetching aborted: " + msg)
         self.doneSignal.emit(vertiefungen)
-
-    #TODO Test this
-    def abort(self):
-        self.driver.quit()

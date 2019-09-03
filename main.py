@@ -1,8 +1,8 @@
 import sys, time, functools, datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, QMessageBox, QLineEdit, \
-                            QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QCheckBox, QGroupBox, QShortcut, \
-                            QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout, QHBoxLayout
+    QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QCheckBox, QGroupBox, QShortcut, \
+    QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout, QHBoxLayout
 from CourseFetcher import WorkerObject
 from CourseWidget import Catalogue
 from CourseWidget import Course
@@ -141,7 +141,7 @@ class MainWindow(QMainWindow):
             l.setObjectName("Personal WFK " + Catalogue.catalogueLetters[index] + " list")
             l.itemDoubleClicked.connect(self.personalItemDoubleClicked)
             l.keyPressEvent = self.keyPressEventDeleteCourse
-            
+
             row = 0
             rowSpan = self.personalCatalogueRowsFirst
             col = self.tissCataloguesCols + 1 + self.personalCatalogueCols
@@ -209,20 +209,15 @@ class MainWindow(QMainWindow):
 
     def setupWorkerThread(self):
         # Setup the worker object and the worker_thread.
-        worker = WorkerObject()
-        worker_thread = QtCore.QThread(self)
-        worker.moveToThread(worker_thread)
-        worker_thread.start()
+        self.worker = WorkerObject()
+        self.worker_thread = QtCore.QThread(self)
+        self.worker.moveToThread(self.worker_thread)
+        self.worker_thread.start()
 
         # Connect any worker signals
-        worker.doneSignal.connect(self.fetchingFinished)
-        worker.updateSignal.connect(self.updateStatus)
-        self.fetchButton.clicked.connect(functools.partial(worker.startWork, self.semesterSelectBox.currentText(), self.timeout))
-
-        """def forceWorkerQuit(self):
-            if worker_thread.isRunning():
-                worker_thread.terminate()
-                worker_thread.wait()"""
+        self.worker.doneSignal.connect(self.fetchingFinished)
+        self.worker.updateSignal.connect(self.updateStatus)
+        self.fetchButton.clicked.connect(functools.partial(self.worker.startWork, self.semesterSelectBox.currentText(), self.timeout))
 
     def closeEvent(self, event):
         FileManager.storeSettings([self.lastFetchDateTime.text(), self.toggleCourseNumbers.isChecked(), self.toggleCourseHours.isChecked()])
@@ -263,8 +258,8 @@ class MainWindow(QMainWindow):
 
     def addTestCourses(self):
         for idx, letter in enumerate(Catalogue.catalogueLetters):
-            c = Catalogue("Test"+letter)
-            ca = Course("000.000", "VO", "2019W", "TestName"+str(idx), 3.0, 3.0, "test.com")
+            c = Catalogue("Test" + letter)
+            ca = Course("000.000", "VO", "2019W", "TestName" + str(idx), 3.0, 3.0, "test.com")
             c.courses.append(ca)
             self.addNewCourse(self.tissCatalogues[idx], ca, False)
 
@@ -322,7 +317,7 @@ class MainWindow(QMainWindow):
 
     def personalItemDoubleClicked(self, item):
         originList = self.sender()
-        self.removeItemFromPersonal(originList, item)        
+        self.removeItemFromPersonal(originList, item)
 
     def removeItemFromPersonal(self, personalList, item):
         courseIdx = personalList.indexFromItem(item).row()
@@ -426,19 +421,20 @@ class MainWindow(QMainWindow):
         self.progressBar.setValue(self.progressBar.value() + self.fetchIncrement)
 
     def fetchingFinished(self, catalogues):
-        self.progressBar.setValue(0)
-        self.statusOutput.setText("Importing courses...")
+        if len(catalogues) > 0:
+            self.progressBar.setValue(0)
+            self.statusOutput.setText("Importing courses...")
 
-        for index, c in enumerate(catalogues):
-            currentListWidget = self.tissCatalogues[index]
-            for i, co in enumerate(c.courses):
-                self.addNewCourse(currentListWidget, co, False)
-                self.statusOutput.setText("Importing \"WFK %s\"...(%i/%i)"%(Catalogue.catalogueLetters[index], i, len(c.courses)))
-                self.progressBar.setValue(int(float(i/len(c.courses))*100))
-                QtWidgets.qApp.processEvents()
-                
-        self.statusOutput.setText("Finished (%.2fs)" % (time.time()-self.startTime));
-        self.lastFetchDateTime.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            for index, c in enumerate(catalogues):
+                currentListWidget = self.tissCatalogues[index]
+                for i, co in enumerate(c.courses):
+                    self.addNewCourse(currentListWidget, co, False)
+                    self.statusOutput.setText("Importing \"WFK %s\"...(%i/%i)" % (Catalogue.catalogueLetters[index], i, len(c.courses)))
+                    self.progressBar.setValue(int(float(i / len(c.courses)) * 100))
+                    QtWidgets.qApp.processEvents()
+
+            self.statusOutput.setText("Finished (%.2fs)" % (time.time() - self.startTime))
+            self.lastFetchDateTime.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
         self.setUIEnabled(True)
         self.updateTitles()
 

@@ -1,15 +1,13 @@
 import os.path
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QWidget, QLabel, QSizePolicy, QHBoxLayout, QFrame, QLayout
 from CourseWidget import Catalogue
 from CourseWidget import Course
-    
+
 class FileManager():
     FOLDER = "data/"
     ALL_COURSES_FILENAME = "ALL_COURSES.TXT"
     PERSONAL_COURSES_FILENAME = "PERSONAL_COURSES.TXT"
     SETTINGS_FILENAME = "SETTINGS.TXT"
-        
+
     def storeCourses(allCoursesCatalogues, personalCoursesCatalogues):
         FileManager._storeCatalogues(allCoursesCatalogues, FileManager.ALL_COURSES_FILENAME)
         FileManager._storeCatalogues(personalCoursesCatalogues, FileManager.PERSONAL_COURSES_FILENAME)
@@ -29,7 +27,7 @@ class FileManager():
 
     def _loadCatalogues(fileName):
         f = FileManager.openFile(fileName, False)
-        if f == None:
+        if f is None:
             return []
 
         catalogues = []
@@ -66,7 +64,7 @@ class FileManager():
 
     def loadSettings():
         f = FileManager.openFile(FileManager.SETTINGS_FILENAME, False)
-        if f == None:
+        if f is None:
             return []
         data = f.readline().split('|')
         return data
