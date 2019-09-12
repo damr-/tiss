@@ -411,10 +411,9 @@ class MainWindow(QMainWindow):
             self.updateTitles()
         self.checkCurriculumButton.setEnabled(enabled)
         self.clearCurriculumFeedbackButton.setEnabled(enabled)
-        val = 0
+        self.progressBar.setValue(0)
         if enabled:
-            val = 1
-        self.progressBar.setValue(val)
+            self.progressBar.setValue(1)
 
     def updateStatus(self, str):
         self.statusOutput.setText(str)
