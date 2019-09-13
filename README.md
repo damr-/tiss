@@ -8,3 +8,5 @@ Created using
 - PyQt5
 - Selenium
 - BeautifulSoup
+
+![Program Screenshot](https://raw.githubusercontent.com/damr-/tiss/master/screenshot.png)
