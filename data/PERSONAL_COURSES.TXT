@@ -1,6 +1,19 @@
 A
+138.099|VO|2019W|Steuerung und Auswertung von Experimenten|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138099&semester=2019W
+138.100|UE|2019W|Steuerung und Auswertung von Experimenten|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138100&semester=2019W
+142.197|VO|2019W|Quantenchromodynamik I|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142197&semester=2019W
 B
 C
 141.158|VO|2020S|Neutronenoptik und Tomographie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141158&semester=2020S
 D
 141.A76|LU|2019W|Graphical Programming and Experiment Control|4.0|4.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141A76&semester=2019W
+141.685|VO|2019W|Supraleitung|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141685&semester=2019W
+134.514|VO|2019W|Atomare Stoßprozesse|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134514&semester=2019W
+142.769|VO|2019W|Physik der Atmosphäre|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142769&semester=2019W
+134.161|VO|2019W|Elektronische Messtechnik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134161&semester=2019W
+141.281|VO|2019W|Radioökologie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141281&semester=2019W
+134.165|VO|2019W|Oberflächenphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134165&semester=2019W
+138.034|VO|2019W|Tieftemperaturphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=138034&semester=2019W
+134.169|VO|2019W|Plasmatechnologie und -chemie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134169&semester=2019W
+134.995|VO|2019W|Technische Akustik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134995&semester=2019W
+101.028|VO|2019W|Einführung in die Biomedizinische Technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=101028&semester=2019W
