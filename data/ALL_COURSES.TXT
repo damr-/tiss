@@ -16,6 +16,7 @@ A
 134.359|VO|2020S|Grundlagen der Plasmatheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134359&semester=2020S
 135.045|VO|2020S|Introduction to quantum electrodynamics|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=135045&semester=2020S
 135.053|VO|2019W|Lie-Gruppen in der Feldtheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=135053&semester=2019W
+136.022|VO|2019W|Logische Methoden in der Theoretischen Physik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136022&semester=2019W
 142.725|VO|2019W|Pfadintegrale in der Quantenmechanik und Quantenfeldtheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142725&semester=2019W
 132.968|VO|2019W|Phasenübergänge und krit. Phänomene|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=132968&semester=2019W
 136.051|VO|2019W|Physik weicher Materie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136051&semester=2019W
@@ -54,6 +55,8 @@ B
 134.154|VO|2019W|Der Laser in Physik, Chemie, Biologie und Medizin|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134154&semester=2019W
 134.194|VO|2020S|Einführung in die Plasmaphysik und -technik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134194&semester=2020S
 136.047|UE|2019W|Elektrodynamik II|2.0|2.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=136047&semester=2019W
+141.234|VO|2019W|Fundamental Physics with Coherent X-Rays and Neutrons|1.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141234&semester=2019W
+141.236|VO|2020S|Fundamental Physics with Polarized Neutrons|1.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141236&semester=2020S
 134.359|VO|2020S|Grundlagen der Plasmatheorie|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=134359&semester=2020S
 141.231|VO|2020S|Macroscopic Quantum Systems|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=141231&semester=2020S
 142.318|VO|2019W|Neutronen- und Kernphysik|2.0|3.0|https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=142318&semester=2019W
