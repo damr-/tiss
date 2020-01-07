@@ -9,7 +9,6 @@ from CourseWidget import Course
 from CourseWidget import CourseWidget
 from FileManager import FileManager
 
-
 class MainWindow(QMainWindow):
 
     def __init__(self):
@@ -38,6 +37,7 @@ class MainWindow(QMainWindow):
             self.lastFetchDateTime.setText(settings[0])
             self.toggleCourseNumbers.setChecked(FileManager.str2bool(settings[1]))
             self.toggleCourseHours.setChecked(FileManager.str2bool(settings[2]))
+            self.exactSemester.setChecked(FileManager.str2bool(settings[3]))
 
     def initUI(self):
         centralWidget = QWidget(self)
@@ -60,8 +60,8 @@ class MainWindow(QMainWindow):
         hlayout.setContentsMargins(0, 0, 0, 0)
         hlayout.setSpacing(0)
         self.semesterSelectBox = QComboBox(self)
-        self.semesterSelectBox.addItem("2019S")
         self.semesterSelectBox.addItem("2019W")
+        self.semesterSelectBox.addItem("2020S")
         self.semesterSelectBox.setCurrentIndex(1)
         hlayout.addWidget(self.semesterSelectBox)
 
@@ -69,6 +69,14 @@ class MainWindow(QMainWindow):
         self.fetchButton.clicked.connect(self.prepareFetching)
         hlayout.addWidget(self.fetchButton)
         fetchLayout.addLayout(hlayout)
+
+        hlayout2 = QHBoxLayout()
+        hlayout2.setContentsMargins(0, 0, 0, 20)
+        hlayout2.setSpacing(0)
+        self.exactSemester = QCheckBox("Exactly this semester", self)
+        hlayout2.setAlignment(QtCore.Qt.AlignRight)
+        hlayout2.addWidget(self.exactSemester)
+        fetchLayout.addLayout(hlayout2)
 
         self.statusOutput = QLabel("<Status output>", self)
         fetchLayout.addWidget(self.statusOutput)
@@ -113,7 +121,7 @@ class MainWindow(QMainWindow):
         for index, l in enumerate(self.tissCatalogues):
             l.setSizePolicy(sizePolicy)
             l.setMinimumSize(QtCore.QSize(50, 50))
-            l.setObjectName("WFK " + Catalogue.catalogueLetters[index] + " list")
+            l.setObjectName(f"WFK {Catalogue.catalogueLetters[index]} list")
             l.setEditTriggers(QAbstractItemView.NoEditTriggers)
             l.setDropIndicatorShown(False)
             l.setDragEnabled(False)
@@ -138,7 +146,7 @@ class MainWindow(QMainWindow):
             l.setDragEnabled(False)
             l.setDefaultDropAction(QtCore.Qt.IgnoreAction)
             l.setSelectionMode(QAbstractItemView.SingleSelection)
-            l.setObjectName("Personal WFK " + Catalogue.catalogueLetters[index] + " list")
+            l.setObjectName(f"Personal WFK {Catalogue.catalogueLetters[index]} list")
             l.itemDoubleClicked.connect(self.personalItemDoubleClicked)
             l.keyPressEvent = self.keyPressEventDeleteCourse
 
@@ -217,10 +225,10 @@ class MainWindow(QMainWindow):
         # Connect any worker signals
         self.worker.doneSignal.connect(self.fetchingFinished)
         self.worker.updateSignal.connect(self.updateStatus)
-        self.fetchButton.clicked.connect(functools.partial(self.worker.startWork, self.semesterSelectBox.currentText(), self.timeout))
+        self.fetchButton.clicked.connect(functools.partial(self.worker.startWork, self.semesterSelectBox, self.exactSemester, self.timeout))
 
     def closeEvent(self, event):
-        FileManager.storeSettings([self.lastFetchDateTime.text(), self.toggleCourseNumbers.isChecked(), self.toggleCourseHours.isChecked()])
+        FileManager.storeSettings([self.lastFetchDateTime.text(), self.toggleCourseNumbers.isChecked(), self.toggleCourseHours.isChecked(), self.exactSemester.isChecked()])
         self.storeCourses()
         event.accept()
 
@@ -238,7 +246,7 @@ class MainWindow(QMainWindow):
                     count += 1
                 else:
                     widget.setGreyedOut(True)
-            self.tabWidget.setTabText(index, Catalogue.catalogueLetters[index] + " (" + str(count) + "/" + str(len(self.tissCatalogues[index])) + ")")
+            self.tabWidget.setTabText(index, f"{Catalogue.catalogueLetters[index]} ({count}/{len(self.tissCatalogues[index])})")
         if text == "":
             self.updateTitles()
             self.checkCurriculumButton.setEnabled(True)
@@ -256,12 +264,12 @@ class MainWindow(QMainWindow):
                 widget = self.getItemWidget(self.personalCatalogues[index], i)
                 widget.setInfoHidden(infoIdx, hidden)
 
-    def addTestCourses(self):
-        for idx, letter in enumerate(Catalogue.catalogueLetters):
-            c = Catalogue("Test" + letter)
-            ca = Course("000.000", "VO", "2019W", "TestName" + str(idx), 3.0, 3.0, "test.com")
-            c.courses.append(ca)
-            self.addNewCourse(self.tissCatalogues[idx], ca, False)
+    # def addTestCourses(self):
+    #     for idx, letter in enumerate(Catalogue.catalogueLetters):
+    #         c = Catalogue("Test" + letter)
+    #         ca = Course("000.000", "VO", "2019W", "TestName" + str(idx), 3.0, 3.0, "test.com")
+    #         c.courses.append(ca)
+    #         self.addNewCourse(self.tissCatalogues[idx], ca, False)
 
     def addNewCourse(self, targetList, course, isPersonal):
         itemWidget = CourseWidget(course, isPersonal)
@@ -330,16 +338,16 @@ class MainWindow(QMainWindow):
             for i in range(self.tissCatalogues[index].count()):
                 widget = self.getItemWidget(self.tissCatalogues[index], i)
                 credits += widget.course.credits
-            self.tabWidget.setTabText(index, Catalogue.catalogueLetters[index] + " (" + str(len(self.tissCatalogues[index])) + ", " + str(credits) + ")")
+            self.tabWidget.setTabText(index, f"{Catalogue.catalogueLetters[index]} ({len(self.tissCatalogues[index])}, {credits})")
             credits = 0
             for i in range(self.personalCatalogues[index].count()):
                 widget = self.getItemWidget(self.personalCatalogues[index], i)
                 credits += widget.course.credits
-            self.personalCataloguesTitles[index].setText("WFK " + Catalogue.catalogueLetters[index] + " (" + str(len(self.personalCatalogues[index])) + ", " + str(credits) + ")")
+            self.personalCataloguesTitles[index].setText(f"WFK {Catalogue.catalogueLetters[index]} ({len(self.personalCatalogues[index])}, {credits})")
 
     def checkCurriculum(self):
         for index in range(len(Catalogue.catalogueLetters)):
-            curriculumCatalogue = open("WFK/WFK_" + Catalogue.catalogueLetters[index] + ".txt", 'r')
+            curriculumCatalogue = open(f"WFK/WFK_{Catalogue.catalogueLetters[index]}.txt", 'r')
             curriculumCourses = []
             for line in curriculumCatalogue:
                 parts = line.strip().split('|')
@@ -411,6 +419,7 @@ class MainWindow(QMainWindow):
             self.updateTitles()
         self.checkCurriculumButton.setEnabled(enabled)
         self.clearCurriculumFeedbackButton.setEnabled(enabled)
+        self.exactSemester.setEnabled(enabled)
         self.progressBar.setValue(0)
         if enabled:
             self.progressBar.setValue(1)
@@ -428,7 +437,7 @@ class MainWindow(QMainWindow):
                 currentListWidget = self.tissCatalogues[index]
                 for i, co in enumerate(c.courses):
                     self.addNewCourse(currentListWidget, co, False)
-                    self.statusOutput.setText("Importing \"WFK %s\"...(%i/%i)" % (Catalogue.catalogueLetters[index], i, len(c.courses)))
+                    self.statusOutput.setText(f"Importing \"WFK {Catalogue.catalogueLetters[index]}\"...({i}/{len(c.courses)})")
                     self.progressBar.setValue(int(float(i / len(c.courses)) * 100))
                     QtWidgets.qApp.processEvents()
 

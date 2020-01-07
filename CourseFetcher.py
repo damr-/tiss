@@ -50,7 +50,7 @@ class WorkerObject(QtCore.QObject):
         except TimeoutException:
             return [], "Timed out"
 
-        self.updateSignal.emit("Selecting semester %s..." % semester)
+        self.updateSignal.emit(f"Selecting semester {semester}...")
         semesterSelect = Select(self.driver.find_element_by_id('j_id_2b:semesterSelect'))
         semesterSelect.select_by_visible_text(semester)
 
@@ -90,13 +90,13 @@ class WorkerObject(QtCore.QObject):
                 filteredEntries.append(entry)
         return filteredEntries, ""
 
-    def sortEntries(self, entries):
+    def sortEntries(self, entries, semester, exactSemester):
         catalogues = []
         i = 0
         curCatalogue = None
 
         for entry in entries:
-            self.updateSignal.emit("Sorting entries (%i/%i)..." % ((i + 1), len(entries)))
+            self.updateSignal.emit(f"Sorting entries ({i+1}/{len(entries)})...")
 
             if any(entry.text.strip() == ignored for ignored in ignoredRows):
                 pass
@@ -108,14 +108,15 @@ class WorkerObject(QtCore.QObject):
                 firstRow = parts[0].split(' ')
                 number = firstRow[0]
                 courseType = firstRow[1]
-                semester = firstRow[2]
-                name = parts[2]
-                link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
-                aunts = entry.parent.parent.findChildren("td", recursive=False)
-                hours = float(aunts[2].text.strip())
-                credits = float(aunts[3].text.strip())
-                newCourse = Course(number, courseType, semester, name, hours, credits, link)
-                curCatalogue.courses.append(newCourse)
+                curSemester = firstRow[2]
+                if not exactSemester or curSemester == semester:
+                    name = parts[2]
+                    link = linkprefix + entry.findChild("div", {"class": "courseTitle"}, recursive=False).findChild("a")['href']
+                    aunts = entry.parent.parent.findChildren("td", recursive=False)
+                    hours = float(aunts[2].text.strip())
+                    credits = float(aunts[3].text.strip())
+                    newCourse = Course(number, courseType, curSemester, name, hours, credits, link)
+                    curCatalogue.courses.append(newCourse)
             elif isCanceledCourse(entry):
                 pass
             else:
@@ -123,11 +124,13 @@ class WorkerObject(QtCore.QObject):
             i += 1
         return catalogues
 
-    def startWork(self, semester, timeout):
+    def startWork(self, semesterSelectBox, exactSemesterBox, timeout):
+        semester = semesterSelectBox.currentText()
+        exactSemester = exactSemesterBox.isChecked()
         self.driver = self.startGecko()
         courses, msg = self.getVertiefung1Courses(coursesURL, semester, timeout)
         self.driver.quit()
-        vertiefungen = self.sortEntries(courses)
+        vertiefungen = self.sortEntries(courses, semester, exactSemester)
         if len(courses) > 0:
             self.updateSignal.emit("Fetching finished")
         else:
