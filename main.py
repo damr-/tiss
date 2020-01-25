@@ -1,12 +1,10 @@
 import sys, time, functools, datetime
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTextBrowser, QTabWidget, QMessageBox, QLineEdit, \
-    QDesktopWidget, QLabel, QProgressBar, QListWidget, QAbstractScrollArea, QCheckBox, QGroupBox, QShortcut, \
-    QAbstractItemView, QListView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout, QHBoxLayout
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTabWidget, QLineEdit, \
+    QDesktopWidget, QLabel, QProgressBar, QListWidget, QCheckBox, QGroupBox, QShortcut, \
+    QAbstractItemView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout, QHBoxLayout
 from CourseFetcher import WorkerObject
-from CourseWidget import Catalogue
-from CourseWidget import Course
-from CourseWidget import CourseWidget
+from CourseWidget import CourseWidget, Catalogue, Course
 from FileManager import FileManager
 
 class MainWindow(QMainWindow):
@@ -264,13 +262,6 @@ class MainWindow(QMainWindow):
                 widget = self.getItemWidget(self.personalCatalogues[index], i)
                 widget.setInfoHidden(infoIdx, hidden)
 
-    # def addTestCourses(self):
-    #     for idx, letter in enumerate(Catalogue.catalogueLetters):
-    #         c = Catalogue("Test" + letter)
-    #         ca = Course("000.000", "VO", "2019W", "TestName" + str(idx), 3.0, 3.0, "test.com")
-    #         c.courses.append(ca)
-    #         self.addNewCourse(self.tissCatalogues[idx], ca, False)
-
     def addNewCourse(self, targetList, course, isPersonal):
         itemWidget = CourseWidget(course, isPersonal)
         item = QListWidgetItem()
@@ -406,8 +397,6 @@ class MainWindow(QMainWindow):
 
     def prepareFetching(self):
         self.statusOutput.setText("")
-        for l in self.tissCatalogues:
-            l.clear()
         self.setUIEnabled(False)
         self.startTime = time.time()
 
@@ -430,6 +419,9 @@ class MainWindow(QMainWindow):
 
     def fetchingFinished(self, catalogues):
         if len(catalogues) > 0:
+            for l in self.tissCatalogues:
+                l.clear()
+
             self.progressBar.setValue(0)
             self.statusOutput.setText("Importing courses...")
 
