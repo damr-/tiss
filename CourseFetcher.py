@@ -1,14 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from bs4 import BeautifulSoup
 from PyQt5 import QtCore
-from CourseWidget import Course
-from CourseWidget import Catalogue
+from CourseWidget import Course, Catalogue
 
 coursesURL = "https://tiss.tuwien.ac.at/curriculum/public/curriculum.xhtml?key=43093&semester=NEXT"
 linkprefix = "https://tiss.tuwien.ac.at"
@@ -46,16 +44,16 @@ class WorkerObject(QtCore.QObject):
             return [], "Connection error"
 
         try:
-            WebDriverWait(self.driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID, 'j_id_2b')))
+            WebDriverWait(self.driver, TIMEOUT).until(EC.visibility_of_element_located((By.ID, 'j_id_2e')))
         except TimeoutException:
             return [], "Timed out"
 
         self.updateSignal.emit(f"Selecting semester {semester}...")
-        semesterSelect = Select(self.driver.find_element_by_id('j_id_2b:semesterSelect'))
+        semesterSelect = Select(self.driver.find_element_by_id('j_id_2e:semesterSelect'))
         semesterSelect.select_by_visible_text(semester)
 
         try:
-            WebDriverWait(self.driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2b:j_id_2g')))
+            WebDriverWait(self.driver, TIMEOUT).until(EC.invisibility_of_element_located((By.ID, 'j_id_2e:j_id_2j')))
         except TimeoutException:
             return [], "Timed out"
 

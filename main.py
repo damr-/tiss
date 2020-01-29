@@ -1,6 +1,6 @@
 import sys, time, functools, datetime
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QTabWidget, QLineEdit, \
+from PyQt5.QtWidgets import qApp, QMainWindow, QApplication, QWidget, QPushButton, QTabWidget, QLineEdit, \
     QDesktopWidget, QLabel, QProgressBar, QListWidget, QCheckBox, QGroupBox, QShortcut, \
     QAbstractItemView, QListWidgetItem, QSizePolicy, QGridLayout, QComboBox, QVBoxLayout, QHBoxLayout
 from CourseFetcher import WorkerObject
@@ -431,7 +431,7 @@ class MainWindow(QMainWindow):
                     self.addNewCourse(currentListWidget, co, False)
                     self.statusOutput.setText(f"Importing \"WFK {Catalogue.catalogueLetters[index]}\"...({i}/{len(c.courses)})")
                     self.progressBar.setValue(int(float(i / len(c.courses)) * 100))
-                    QtWidgets.qApp.processEvents()
+                    qApp.processEvents()
 
             self.statusOutput.setText("Finished (%.2fs)" % (time.time() - self.startTime))
             self.lastFetchDateTime.setText(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
